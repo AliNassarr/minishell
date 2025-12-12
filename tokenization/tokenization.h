@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 20:58:44 by invader           #+#    #+#             */
-/*   Updated: 2025/11/27 17:32:23 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:45:07 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "stdio.h"
 # include "stdlib.h"
+# include "../builtins/ft_utils.h"
 
 typedef struct s_node
 {
@@ -51,6 +52,7 @@ typedef struct s_token
 t_token	*expansionprepartion(char *str, int *count, t_head *head);
 int		counttokens(char *str);
 void	*gc_malloc(t_head *head, int size);
+void	gc_free_all(t_head *head);
 int		isquote(char *str, int i);
 
 #endif

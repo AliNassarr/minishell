@@ -6,7 +6,7 @@
 #    By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/26 16:55:00 by invader           #+#    #+#              #
-#    Updated: 2025/11/27 17:11:00 by alnassar         ###   ########.fr        #
+#    Updated: 2025/12/11 16:33:49 by alnassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,12 @@ NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 
-SRCS = helper.c \
-       stage1.c
+SRCS =  tokenization/helper.c \
+		tokenization/stage1.c \
+		builtins/ft_utils.c \
+		builtins/pwd.c \
+		builtins/echo.c
+
 
 OBJS = $(SRCS:.c=.o)
 

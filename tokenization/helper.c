@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 16:29:32 by invader           #+#    #+#             */
-/*   Updated: 2025/11/27 15:25:54 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/11 14:54:02 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,25 @@ void	*gc_malloc(t_head *head, int size)
 		current->next = new_node;
 	}
 	return (str);
+}
+
+void	gc_free_all(t_head *head)
+{
+	t_node	*current;
+	t_node	*temp;
+
+	if (!head)
+		return ;
+	current = head->head;
+	while (current != NULL)
+	{
+		temp = current->next;
+		if (current->data)
+			free(current->data);
+		free(current);
+		current = temp;
+	}
+	head->head = NULL;
 }
 
 int	isquote(char *str, int i)
@@ -98,5 +117,6 @@ int	main(int argc, char *argv[])
 			printf("Token %d: [NULL] Type: %d\n", i, tokens[i].type);
 		i++;
 	}
+	gc_free_all(&head);
 	return (0);
 }
