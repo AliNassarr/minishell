@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 10:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/12 21:21:54 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:54:38 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ typedef struct s_shell
 /*
 ** Environment management
 */
-char	**copy_environment(char **envp);
+char	**copy_environment(char **envp, t_head *gc);
 char	*get_env_value(char **env, const char *key);
-char	**set_env_value(char **env, const char *key, const char *value);
+char	**set_env_value(char **env, const char *key, const char *value,
+			t_head *gc);
 char	**unset_env_value(char **env, const char *key);
-void	free_environment(char **env);
 int		env_array_size(char **env);
 
 /*
