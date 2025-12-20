@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 15:30:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/20 16:29:02 by invader          ###   ########.fr       */
+/*   Updated: 2025/12/20 21:26:26 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include "ft_utils.h"
-#include "../tokenization/tokenization.h"
 #include <stdlib.h>
 
 int	ft_strcmp(const char *s1, const char *s2)
@@ -22,6 +21,20 @@ int	ft_strcmp(const char *s1, const char *s2)
 	i = 0;
 	while (s1[i] && s2[i] && s1[i] == s2[i])
 		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+
+	if (n == 0)
+		return (0);
+	i = 0;
+	while (i < n && s1[i] && s2[i] && s1[i] == s2[i])
+		i++;
+	if (i == n)
+		return (0);
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
@@ -72,7 +85,7 @@ char	*ft_strdup_gc(char *s, t_head *gc)
 	if (!s)
 		return (NULL);
 	len = ft_strlen(s);
-	dup = gc_malloc(gc, sizeof(char) * (len + 1));
+	dup = gcmalloc(gc, sizeof(char) * (len + 1));
 	if (!dup)
 		return (NULL);
 	ft_strcpy(dup, s);

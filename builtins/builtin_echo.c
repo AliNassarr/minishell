@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
+#include "../utils/ft_utils.h"
 
 void	builtin_echo(char *str)
 {

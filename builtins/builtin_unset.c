@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
+#include "../utils/ft_utils.h"
 
 /*
 ** is_valid_unset_identifier - Check if variable name is valid

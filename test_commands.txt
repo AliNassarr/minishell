@@ -1,0 +1,12 @@
+pwd
+echo Starting tests...
+echo hello world
+echo test1 test2 test3
+ls | head -3
+echo redirect > test_output.txt extra_arg
+cat test_output.txt
+echo append >> test_output.txt more_args
+cat test_output.txt
+echo pipe_test | cat
+env | grep PATH | head -1
+exit

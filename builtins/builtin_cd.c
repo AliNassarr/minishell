@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
+#include "../utils/ft_utils.h"
 
 static char	*get_cd_path(t_shell *shell, char *path)
 {

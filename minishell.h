@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:44:12 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 16:28:11 by invader          ###   ########.fr       */
+/*   Updated: 2025/12/20 21:37:20 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int			quotecheck(char *str);
 t_treenode	*asthelper(char *str, t_head *head, char **pp);
 void		print_ast(t_treenode *root);
 t_head		*intializehead(void);
+void		gcallfree(t_head *head);
+void		*gcmalloc(t_head *head, int size);
 
 /*
 ** Environment management
@@ -111,6 +113,7 @@ void		printsignalmsg(int signal_num);
 ** Execution
 */
 int			is_builtin(const char *cmd);
-int			execute_builtin(t_shell *shell, char *cmd, char *args);
+int			execute_builtin(t_shell *shell, char *cmd, char **args);
+int			execute_ast(t_treenode *node, t_shell *shell, t_head *head);
 
 #endif

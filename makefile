@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: invader <invader@student.42.fr>            +#+  +:+       +#+         #
+#    By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/26 16:55:00 by invader           #+#    #+#              #
-#    Updated: 2025/12/20 00:51:38 by invader          ###   ########.fr        #
+#    Updated: 2025/12/20 21:26:26 by alnassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,21 @@ SRCS =	minishell.c \
 		parsing/ast.c \
 		parsing/preparation.c \
 		parsing/stage2.c \
-		debug/astprint.c
+		debug/astprint.c \
+		execution/executor.c \
+		builtins/builtin_dispatch.c \
+		builtins/builtin_cd.c \
+		builtins/builtin_echo.c \
+		builtins/builtin_env.c \
+		builtins/builtin_exit.c \
+		builtins/builtin_export.c \
+		builtins/builtin_pwd.c \
+		builtins/builtin_unset.c \
+		signals/signal_handlers.c \
+		signals/signal_setup.c \
+		signals/signal_utils.c \
+		utils/ft_utils.c \
+		utils/env_utils.c
 
 
 OBJS = $(SRCS:.c=.o)

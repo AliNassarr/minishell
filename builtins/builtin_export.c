@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
+#include "../utils/ft_utils.h"
 
 /*
 ** is_valid_identifier - Check if variable name is valid
@@ -68,7 +69,7 @@ static char	*extract_key(const char *str, int equals_pos, t_head *gc)
 	char	*key;
 	int		i;
 
-	key = gc_malloc(gc, equals_pos + 1);
+	key = gcmalloc(gc, equals_pos + 1);
 	if (!key)
 		return (NULL);
 	i = 0;
