@@ -6,7 +6,7 @@
 /*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 20:08:44 by invader           #+#    #+#             */
-/*   Updated: 2025/11/26 17:49:33 by invader          ###   ########.fr       */
+/*   Updated: 2025/12/20 02:57:53 by invader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,25 @@ t_token	handledoublequote(char *str, int *j, int *i, t_head *head)
 
 	(*i)++;
 	temp = (*i);
-	while (str[temp] && (str[temp] != '"' || str[temp - 1] == '\\'))
+	while (str[temp] && (str[temp] != '"' || isbackslash(str, temp)))
 		temp++;
-	token.str = gc_malloc(head, (temp - (*i)) + 1);
+	token.str = gcmalloc(head, (temp - (*i)) + 1);
 	if (!token.str)
 		return (token.type = ER, token);
 	token.type = DQ;
+	token.expansion = 0;
 	k = 0;
-	while (str[*i] && (str[*i] != '"' || str[*i - 1] == '\\'))
+	while (str[*i] && (str[*i] != '"' || isbackslash(str, *i)))
 	{
+		if (str[*i] == '$')
+			token.expansion = 1;
 		token.str[k] = str[*i];
 		k++;
 		(*i)++;
 	}
 	token.str[k] = '\0';
 	(*i)++;
-	*j = *i;
-	return (token);
+	return (*j = *i, token);
 }
 
 t_token	handlesinglequote(char *str, int *j, int *i, t_head *head)
@@ -47,14 +49,15 @@ t_token	handlesinglequote(char *str, int *j, int *i, t_head *head)
 
 	(*i)++;
 	temp = (*i);
-	while (str[temp] && (str[temp] != '\'' || str[temp - 1] == '\\'))
+	while (str[temp] && (str[temp] != '\'' || isbackslash(str, temp)))
 		temp++;
-	token.str = gc_malloc(head, (temp - (*i)) + 1);
+	token.str = gcmalloc(head, (temp - (*i)) + 1);
 	if (!token.str)
 		return (token.type = ER, token);
+	token.expansion = 0;
 	token.type = SQ;
 	k = 0;
-	while (str[*i] && (str[*i] != '\'' || str[*i - 1] == '\\'))
+	while (str[*i] && (str[*i] != '\'' || isbackslash(str, *i)))
 	{
 		token.str[k] = str[*i];
 		k++;
@@ -71,18 +74,21 @@ t_token	handlenoquote(char *str, int start, int end, t_head *head)
 	int		k;
 	t_token	token;
 
+	token.expansion = 0;
 	token.type = NQ;
 	if (end - start == 0)
 	{
 		token.str = NULL;
 		return (token);
 	}
-	token.str = gc_malloc(head, sizeof(char) * (end - start + 1));
+	token.str = gcmalloc(head, sizeof(char) * (end - start + 1));
 	if (!token.str)
 		return (token.type = ER, token);
 	k = 0;
 	while (start < end)
 	{
+		if (str[start] == '$')
+			token.expansion = 1;
 		token.str[k] = str[start];
 		start++;
 		k++;
@@ -100,7 +106,7 @@ t_token	*intializetoken(char *str, t_head *head)
 	size = counttokens(str);
 	if (size == 0)
 		return (NULL);
-	tokens = gc_malloc(head, sizeof(t_token) * size);
+	tokens = gcmalloc(head, sizeof(t_token) * size);
 	if (!tokens)
 		return (NULL);
 	return (tokens);
@@ -119,12 +125,12 @@ t_token	*expansionprepartion(char *str, int *count, t_head *head)
 	j = 0;
 	while (str[i])
 	{
-		if (str[i] == '"' && (i == 0 || str[i - 1] != '\\'))
+		if (str[i] == '"' && (i == 0 || !isbackslash(str, i)))
 		{
 			tokens[(*count)++] = handlenoquote(str, j, i, head);
 			tokens[(*count)++] = handledoublequote(str, &j, &i, head);
 		}
-		if (str[i] && str[i] == '\'' && (i == 0 || str[i - 1] != '\\'))
+		if (str[i] && str[i] == '\'' && (i == 0 || !isbackslash(str, i)))
 		{
 			tokens[(*count)++] = handlenoquote(str, j, i, head);
 			tokens[(*count)++] = handlesinglequote(str, &j, &i, head);

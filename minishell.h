@@ -1,0 +1,116 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/19 23:44:12 by invader           #+#    #+#             */
+/*   Updated: 2025/12/20 16:28:11 by invader          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <signal.h>
+
+typedef struct s_node
+{
+	void			*data;
+	struct s_node	*next;
+}	t_node;
+
+typedef struct s_head
+{
+	t_node	*head;
+}	t_head;
+
+typedef enum e_token_type
+{
+	PIPE,
+	OR,
+	AND,
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	HEREDOC,
+	CMD,
+	ARG,
+	FILENAME,
+	LIMITER,
+	UNKNOWN
+}	t_token_type;
+
+typedef struct s_parse_token
+{
+	char			*str;
+	t_token_type	type;
+}	t_parse_token;
+
+typedef struct s_treenode
+{
+	t_parse_token		*tokens;
+	int					token_count;
+	struct s_treenode	*left;
+	struct s_treenode	*right;
+}	t_treenode;
+
+typedef struct s_shell
+{
+	char	**env;
+	char	*pwd;
+	char	*oldpwd;
+	int		exit_status;
+	int		should_exit;
+}	t_shell;
+
+char		*fixspaces(char *str, t_head *head, int i, int j);
+int			quotecheck(char *str);
+t_treenode	*asthelper(char *str, t_head *head, char **pp);
+void		print_ast(t_treenode *root);
+t_head		*intializehead(void);
+
+/*
+** Environment management
+*/
+char		**copy_environment(char **envp, t_head *gc);
+char		*get_env_value(char **env, const char *key);
+char		**set_env_value(char **env, const char *key, const char *value,
+				t_head *gc);
+char		**unset_env_value(char **env, const char *key, t_head *gc);
+int			env_array_size(char **env);
+
+/*
+** Built-ins
+*/
+int			builtin_pwd(void);
+void		builtin_echo(char *str);
+int			builtin_env(t_shell *shell);
+int			builtin_cd(t_shell *shell, char *path, t_head *gc);
+int			builtin_export(t_shell *shell, char *str, t_head *gc);
+int			builtin_unset(t_shell *shell, char *str, t_head *gc);
+int			builtin_exit(t_shell *shell, char *args);
+
+/*
+** Signal handling
+*/
+void		setupinteractive(void);
+void		setupexecution(void);
+void		restoredefaults(void);
+void		interactivehandler(int sig);
+int			checksignalstatus(int status);
+void		printsignalmsg(int signal_num);
+
+/*
+** Execution
+*/
+int			is_builtin(const char *cmd);
+int			execute_builtin(t_shell *shell, char *cmd, char *args);
+
+#endif
