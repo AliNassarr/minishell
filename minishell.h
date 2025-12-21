@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:44:12 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 21:37:20 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/21 02:10:37 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,18 @@ typedef struct s_treenode
 typedef struct s_shell
 {
 	char	**env;
+	char	**personal_path;
 	char	*pwd;
 	char	*oldpwd;
 	int		exit_status;
 	int		should_exit;
+	t_head	*env_gc;
 }	t_shell;
+
+/*
+** Global variables
+*/
+extern int	g_last_exit_status;
 
 char		*fixspaces(char *str, t_head *head, int i, int j);
 int			quotecheck(char *str);

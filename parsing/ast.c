@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 21:40:19 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 21:28:52 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/21 19:05:38 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ int	findpipeoperator(t_parse_token *tokens, int start, int end)
 {
 	int	i;
 
-	i = start;
-	while (i <= end)
+	i = end;
+	while (i >= start)
 	{
 		if (tokens[i].type == PIPE || tokens[i].type == OR
 			|| tokens[i].type == AND)
 			return (i);
-		i++;
+		i--;
 	}
 	return (-1);
 }

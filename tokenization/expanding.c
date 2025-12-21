@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expanding.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 01:58:52 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 03:24:40 by invader          ###   ########.fr       */
+/*   Updated: 2025/12/21 01:53:24 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,13 @@ void	getname(char *str, int *i, char *varname)
 
 	k = 0;
 	(*i)++;
+	if (str[*i] == '?')
+	{
+		varname[k++] = '?';
+		(*i)++;
+		varname[k] = '\0';
+		return ;
+	}
 	while (str[*i] && !isdelimeter(str[*i]))
 		varname[k++] = str[(*i)++];
 	varname[k] = '\0';
@@ -56,8 +63,18 @@ void	mimic(char *varname, char *expanded, int *j, char **pp)
 {
 	char	*variable;
 	int		k;
+	char	exit_status_str[16];
+	extern int	g_last_exit_status;
 
 	k = 0;
+	if (varname[0] == '?' && varname[1] == '\0')
+	{
+		sprintf(exit_status_str, "%d", g_last_exit_status);
+		k = 0;
+		while (exit_status_str[k])
+			expanded[(*j)++] = exit_status_str[k++];
+		return ;
+	}
 	variable = inpp(varname, pp);
 	if (variable)
 	{
@@ -87,7 +104,12 @@ char	*expand(t_head *head, char *str, char **pp)
 		return (NULL);
 	while (str[i])
 	{
-		if (str[i] == '$' && str[i + 1] && !isdelimeter(str[i + 1]))
+		if (str[i] == '$' && str[i + 1] == '?')
+		{
+			getname(str, &i, varname);
+			mimic(varname, expanded, &j, pp);
+		}
+		else if (str[i] == '$' && str[i + 1] && !isdelimeter(str[i + 1]))
 		{
 			getname(str, &i, varname);
 			mimic(varname, expanded, &j, pp);

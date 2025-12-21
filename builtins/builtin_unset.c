@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 22:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/16 03:25:27 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/21 02:21:36 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ static int	is_valid_unset_identifier(const char *str)
 
 int	builtin_unset(t_shell *shell, char *str, t_head *gc)
 {
+	(void)gc;
 	if (!str || str[0] == '\0')
 		return (0);
 	if (!is_valid_unset_identifier(str))
@@ -84,6 +85,6 @@ int	builtin_unset(t_shell *shell, char *str, t_head *gc)
 		printf("unset: `%s': not a valid identifier\n", str);
 		return (1);
 	}
-	shell->env = unset_env_value(shell->env, str, gc);
+	shell->env = unset_env_value(shell->env, str, shell->env_gc);
 	return (0);
 }

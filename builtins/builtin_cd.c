@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 10:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/16 03:25:30 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/21 02:21:36 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	builtin_cd(t_shell *shell, char *path, t_head *gc)
 	char	*target;
 	char	cwd[1024];
 
+	(void)gc;
 	target = get_cd_path(shell, path);
 	if (!target)
 		return (1);
@@ -46,12 +47,13 @@ int	builtin_cd(t_shell *shell, char *path, t_head *gc)
 		return (perror("cd: getcwd"), 1);
 	if (chdir(target) == -1)
 		return (perror("cd"), 1);
-	shell->oldpwd = ft_strdup_gc(cwd, gc);
+	shell->oldpwd = ft_strdup_gc(cwd, shell->env_gc);
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
-		shell->pwd = ft_strdup_gc(cwd, gc);
-		shell->env = set_env_value(shell->env, "PWD", cwd, gc);
-		shell->env = set_env_value(shell->env, "OLDPWD", shell->oldpwd, gc);
+		shell->pwd = ft_strdup_gc(cwd, shell->env_gc);
+		shell->env = set_env_value(shell->env, "PWD", cwd, shell->env_gc);
+		shell->env = set_env_value(shell->env, "OLDPWD", shell->oldpwd,
+			shell->env_gc);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 22:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/16 03:25:27 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/21 02:10:37 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ int	builtin_export(t_shell *shell, char *str, t_head *gc)
 	char	*key;
 	char	*value;
 
+	(void)gc;
 	if (!str || str[0] == '\0')
 	{
 		print_export(shell);
@@ -163,10 +164,11 @@ int	builtin_export(t_shell *shell, char *str, t_head *gc)
 	equals_pos = find_equals_sign(str);
 	if (equals_pos == -1)
 		return (0);
-	key = extract_key(str, equals_pos, gc);
+	key = extract_key(str, equals_pos, shell->env_gc);
 	if (!key)
 		return (1);
 	value = &str[equals_pos + 1];
-	shell->env = set_env_value(shell->env, key, value, gc);
+	shell->personal_path = set_env_value(shell->personal_path, key, value,
+		shell->env_gc);
 	return (0);
 }

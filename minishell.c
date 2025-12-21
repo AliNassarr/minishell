@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:43:39 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 21:37:17 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/21 02:39:03 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "signals/signals.h"
 #include "utils/ft_utils.h"
 #include <unistd.h>
+
+int	g_last_exit_status = 0;
 
 /*
 ** whitespacecheck - Check if string contains non-whitespace characters
@@ -39,9 +41,14 @@ int	init_shell(t_shell *shell, char **envp, t_head *env_gc)
 {
 	char	cwd[1024];
 
+	shell->env_gc = env_gc;
 	shell->env = copy_environment(envp, env_gc);
 	if (!shell->env)
 		return (1);
+	shell->personal_path = gcmalloc(env_gc, sizeof(char *) * 1);
+	if (!shell->personal_path)
+		return (1);
+	shell->personal_path[0] = NULL;
 	shell->exit_status = 0;
 	shell->should_exit = 0;
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
@@ -83,10 +90,11 @@ void	startminishell(char *str, t_shell *shell, char **envp)
 	t_head		*head;
 	int			exit_status;
 
+	(void)envp;
 	head = intializehead();
 	if (!head)
 		return ;
-	pp = envp;
+	pp = shell->personal_path;
 	if (!quotecheck(str))
 	{
 		printf("minishell: syntax error: unclosed quotes\n");
@@ -107,6 +115,7 @@ void	startminishell(char *str, t_shell *shell, char **envp)
 	exit_status = execute_ast(node, shell, head);
 	setupinteractive();
 	shell->exit_status = exit_status;
+	g_last_exit_status = exit_status;
 	gcallfree(head);
 }
 

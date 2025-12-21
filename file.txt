@@ -1,9 +1,0 @@
-
-=== AST Structure ===
-Root: [OP: >]
-    L: [OP: |]
-        L: [echo test extra]
-        R: [cat file.txt]
-    R: [file.txt]
-=====================
-

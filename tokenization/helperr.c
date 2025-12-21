@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helperr.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:18:03 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 03:24:35 by invader          ###   ########.fr       */
+/*   Updated: 2025/12/21 01:53:24 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	getvarsize(char *varname, char **pp)
 {
 	char	*value;
 
+	if (varname[0] == '?' && varname[1] == '\0')
+		return (16);
 	value = inpp(varname, pp);
 	if (value)
 		return (ft_strlen(value));
@@ -57,7 +59,12 @@ int	gettotalsize(char *str, char **pp)
 	size = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && str[i + 1] && !isdelimeter(str[i + 1]))
+		if (str[i] == '$' && str[i + 1] && str[i + 1] == '?')
+		{
+			size += 16;
+			i += 2;
+		}
+		else if (str[i] == '$' && str[i + 1] && !isdelimeter(str[i + 1]))
 		{
 			i++;
 			k = 0;

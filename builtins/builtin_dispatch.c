@@ -6,12 +6,11 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 20:15:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/20 21:37:18 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/21 03:00:30 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include "../utils/ft_utils.h"
 #include "../utils/ft_utils.h"
 
 /*

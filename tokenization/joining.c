@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   joining.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 23:26:33 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 03:24:18 by invader          ###   ########.fr       */
+/*   Updated: 2025/12/21 03:00:30 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,21 +121,3 @@ char	*joining(t_head *head, t_token *tokens, int count)
 		fix(joined, tokens[count - 1].str, count);
 	return (joined);
 }
-
-///NQ if there isnt space and we have paranthesis we should keep them
-///NQ if there isnt space and we have no paranthesis we should check them
-///NQ if there is space and we have paranthesis we should close them
-///NQ if ther is space and we have no paranthesis we should keepthem
-/*
-while (i < count)
-	{
-		if (tokens[i].str == NULL)
-		{
-			i++;
-			continue ;
-		}
-		printf("%s:\n", tokens[i].str);
-		i++;
-	}
-		
-*/
