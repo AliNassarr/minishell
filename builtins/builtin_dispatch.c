@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 20:15:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/22 02:06:28 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 21:07:43 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	is_builtin(const char *cmd)
 {
 	if (!cmd)
 		return (0);
+	if (ft_strcmp(cmd, ":") == 0)
+		return (1);
 	if (ft_strcmp(cmd, "echo") == 0)
 		return (1);
 	if (ft_strcmp(cmd, "cd") == 0)
@@ -91,7 +93,9 @@ int	execute_builtin(t_shell *shell, char *cmd, char **args)
 
 	joined_args = join_args(args);
 	ret = 0;
-	if (ft_strcmp(cmd, "echo") == 0)
+	if (ft_strcmp(cmd, ":") == 0)
+		ret = 0;
+	else if (ft_strcmp(cmd, "echo") == 0)
 	{
 		builtin_echo(joined_args);
 		ret = 0;

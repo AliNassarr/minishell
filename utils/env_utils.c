@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 20:10:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/20 21:26:26 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 21:07:44 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ char	**unset_env_value(char **env, const char *key, t_head *gc)
 		return (env);
 	key_len = ft_strlen((char *)key);
 	size = env_array_size(env);
-	new_env = gcmalloc(gc, sizeof(char *) * size);
+	new_env = gcmalloc(gc, sizeof(char *) * (size + 1));
 	if (!new_env)
 		return (env);
 	i = 0;
