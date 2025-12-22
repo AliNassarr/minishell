@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 20:15:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/21 03:00:30 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 02:06:28 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,19 @@ int	execute_builtin(t_shell *shell, char *cmd, char **args)
 {
 	char	*joined_args;
 	int		ret;
+	int		i;
+	t_head	*gc;
 
 	joined_args = join_args(args);
 	ret = 0;
 	if (ft_strcmp(cmd, "echo") == 0)
+	{
 		builtin_echo(joined_args);
+		ret = 0;
+	}
 	else if (ft_strcmp(cmd, "cd") == 0)
 	{
-		t_head *gc = intializehead();
+		gc = intializehead();
 		ret = builtin_cd(shell, joined_args, gc);
 		gcallfree(gc);
 	}
@@ -101,20 +106,32 @@ int	execute_builtin(t_shell *shell, char *cmd, char **args)
 		ret = builtin_pwd();
 	else if (ft_strcmp(cmd, "export") == 0)
 	{
-		t_head *gc = intializehead();
-		ret = builtin_export(shell, joined_args, gc);
+		gc = intializehead();
+		if (!args[1])
+			ret = builtin_export(shell, NULL, gc);
+		else
+		{
+			i = 1;
+			while (args[i])
+				ret |= builtin_export(shell, args[i++], gc);
+		}
 		gcallfree(gc);
 	}
 	else if (ft_strcmp(cmd, "unset") == 0)
 	{
-		t_head *gc = intializehead();
-		ret = builtin_unset(shell, joined_args, gc);
+		gc = intializehead();
+		i = 1;
+		while (args[i])
+			ret |= builtin_unset(shell, args[i++], gc);
 		gcallfree(gc);
 	}
 	else if (ft_strcmp(cmd, "env") == 0)
 		ret = builtin_env(shell);
 	else if (ft_strcmp(cmd, "exit") == 0)
+	{
 		ret = builtin_exit(shell, joined_args);
+		shell->exit_status = ret;
+	}
 	else
 		ret = 1;
 	if (joined_args)

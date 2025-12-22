@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 23:26:33 by invader           #+#    #+#             */
-/*   Updated: 2025/12/21 03:00:30 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 01:48:07 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,19 @@ void	mimicp(char *str, char *joined, int *paranthesis, int *j)
 		*paranthesis = 1;
 	}
 	while (str[i])
-		joined[(*j)++] = str[i++];
+	{
+		if (str[i] == '(')
+		{
+			joined[(*j)++] = '\x01';
+		}
+		else if (str[i] == ')')
+		{
+			joined[(*j)++] = '\x02';
+		}
+		else
+			joined[(*j)++] = str[i];
+		i++;
+	}
 }
 
 void	mimicpq(char *str, char *joined, int *paranthesis, int *j)
@@ -89,7 +101,7 @@ int	joinsize(t_token *tokens, int count)
 			size += 2;
 		i++;
 	}
-	size++;
+	size += count * 3;
 	return (size);
 }
 
@@ -117,7 +129,8 @@ char	*joining(t_head *head, t_token *tokens, int count)
 	if (paranthesis == 1)
 		joined[j++] = ')';
 	joined[j] = '\0';
-	if (tokens[count - 1].type == NQ && tokens[count -1].str != NULL)
+	if (count > 0 && tokens[count - 1].type == NQ
+		&& tokens[count - 1].str != NULL)
 		fix(joined, tokens[count - 1].str, count);
 	return (joined);
 }

@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:43:39 by invader           #+#    #+#             */
-/*   Updated: 2025/12/21 02:39:03 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 01:29:28 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,23 +94,38 @@ void	startminishell(char *str, t_shell *shell, char **envp)
 	head = intializehead();
 	if (!head)
 		return ;
-	pp = shell->personal_path;
+	pp = shell->env;
 	if (!quotecheck(str))
 	{
-		printf("minishell: syntax error: unclosed quotes\n");
+		fprintf(stderr, "minishell: syntax error: unclosed quotes\n");
 		shell->exit_status = 2;
+		g_last_exit_status = 2;
 		return (gcallfree(head));
 	}
 	fixed = fixspaces(str, head, 0, 0);
 	if (!fixed)
 		return (gcallfree(head));
+	if (fixed[0] == '\0' || !whitespacecheck(fixed))
+	{
+		shell->exit_status = 0;
+		g_last_exit_status = 0;
+		return (gcallfree(head));
+	}
 	node = asthelper(fixed, head, pp);
 	if (!node)
 	{
+		if (fixed[0] == '\0' || !whitespacecheck(fixed))
+		{
+			shell->exit_status = 0;
+			g_last_exit_status = 0;
+			return (gcallfree(head));
+		}
+		fprintf(stderr, "minishell: syntax error near unexpected token\n");
 		shell->exit_status = 2;
+		g_last_exit_status = 2;
 		return (gcallfree(head));
 	}
-	print_ast(node);
+	// print_ast(node); // DEBUG
 	setupexecution();
 	exit_status = execute_ast(node, shell, head);
 	setupinteractive();

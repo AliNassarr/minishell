@@ -1,0 +1,96 @@
+==383913== Memcheck, a memory error detector
+==383913== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==383913== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==383913== Command: ./minishell
+==383913== Parent PID: 70124
+==383913== 
+==383915== 
+==383915== FILE DESCRIPTORS: 7 open (3 std) at exit.
+==383915== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==383915==    <inherited from parent>
+==383915== 
+==383915== Open file descriptor 38: /dev/ptmx
+==383915==    <inherited from parent>
+==383915== 
+==383915== Open file descriptor 37: /home/alnassar/.config/Code/logs/20251222T005820/ptyhost.log
+==383915==    <inherited from parent>
+==383915== 
+==383915== Open file descriptor 3: /sgoinfre/alnassar/minishelll/valgrind_final.log
+==383915==    <inherited from parent>
+==383915== 
+==383915== 
+==383915== HEAP SUMMARY:
+==383915==     in use at exit: 215,301 bytes in 408 blocks
+==383915==   total heap usage: 679 allocs, 271 frees, 240,081 bytes allocated
+==383915== 
+==383915== LEAK SUMMARY:
+==383915==    definitely lost: 0 bytes in 0 blocks
+==383915==    indirectly lost: 0 bytes in 0 blocks
+==383915==      possibly lost: 0 bytes in 0 blocks
+==383915==    still reachable: 215,301 bytes in 408 blocks
+==383915==         suppressed: 0 bytes in 0 blocks
+==383915== Reachable blocks (those to which a pointer was found) are not shown.
+==383915== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==383915== 
+==383915== For lists of detected and suppressed errors, rerun with: -s
+==383915== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==383916== 
+==383916== FILE DESCRIPTORS: 7 open (3 std) at exit.
+==383916== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==383916==    <inherited from parent>
+==383916== 
+==383916== Open file descriptor 38: /dev/ptmx
+==383916==    <inherited from parent>
+==383916== 
+==383916== Open file descriptor 37: /home/alnassar/.config/Code/logs/20251222T005820/ptyhost.log
+==383916==    <inherited from parent>
+==383916== 
+==383916== Open file descriptor 3: /sgoinfre/alnassar/minishelll/valgrind_final.log
+==383916==    <inherited from parent>
+==383916== 
+==383916== 
+==383916== HEAP SUMMARY:
+==383916==     in use at exit: 215,309 bytes in 408 blocks
+==383916==   total heap usage: 679 allocs, 271 frees, 240,101 bytes allocated
+==383916== 
+==383916== LEAK SUMMARY:
+==383916==    definitely lost: 0 bytes in 0 blocks
+==383916==    indirectly lost: 0 bytes in 0 blocks
+==383916==      possibly lost: 0 bytes in 0 blocks
+==383916==    still reachable: 215,309 bytes in 408 blocks
+==383916==         suppressed: 0 bytes in 0 blocks
+==383916== Reachable blocks (those to which a pointer was found) are not shown.
+==383916== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==383916== 
+==383916== For lists of detected and suppressed errors, rerun with: -s
+==383916== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==383913== 
+==383913== FILE DESCRIPTORS: 7 open (3 std) at exit.
+==383913== Open file descriptor 103: /usr/share/code/v8_context_snapshot.bin
+==383913==    <inherited from parent>
+==383913== 
+==383913== Open file descriptor 38: /dev/ptmx
+==383913==    <inherited from parent>
+==383913== 
+==383913== Open file descriptor 37: /home/alnassar/.config/Code/logs/20251222T005820/ptyhost.log
+==383913==    <inherited from parent>
+==383913== 
+==383913== Open file descriptor 3: /sgoinfre/alnassar/minishelll/valgrind_final.log
+==383913==    <inherited from parent>
+==383913== 
+==383913== 
+==383913== HEAP SUMMARY:
+==383913==     in use at exit: 208,181 bytes in 222 blocks
+==383913==   total heap usage: 697 allocs, 475 frees, 240,106 bytes allocated
+==383913== 
+==383913== LEAK SUMMARY:
+==383913==    definitely lost: 0 bytes in 0 blocks
+==383913==    indirectly lost: 0 bytes in 0 blocks
+==383913==      possibly lost: 0 bytes in 0 blocks
+==383913==    still reachable: 208,181 bytes in 222 blocks
+==383913==         suppressed: 0 bytes in 0 blocks
+==383913== Reachable blocks (those to which a pointer was found) are not shown.
+==383913== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==383913== 
+==383913== For lists of detected and suppressed errors, rerun with: -s
+==383913== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 22:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/21 02:10:37 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 01:26:41 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int	builtin_export(t_shell *shell, char *str, t_head *gc)
 	}
 	if (!is_valid_identifier(str))
 	{
-		printf("export: `%s': not a valid identifier\n", str);
+		fprintf(stderr, "export: `%s': not a valid identifier\n", str);
 		return (1);
 	}
 	equals_pos = find_equals_sign(str);
@@ -168,7 +168,7 @@ int	builtin_export(t_shell *shell, char *str, t_head *gc)
 	if (!key)
 		return (1);
 	value = &str[equals_pos + 1];
-	shell->personal_path = set_env_value(shell->personal_path, key, value,
+	shell->env = set_env_value(shell->env, key, value,
 		shell->env_gc);
 	return (0);
 }

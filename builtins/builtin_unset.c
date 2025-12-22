@@ -81,10 +81,7 @@ int	builtin_unset(t_shell *shell, char *str, t_head *gc)
 	if (!str || str[0] == '\0')
 		return (0);
 	if (!is_valid_unset_identifier(str))
-	{
-		printf("unset: `%s': not a valid identifier\n", str);
-		return (1);
-	}
+		return (0);
 	shell->env = unset_env_value(shell->env, str, shell->env_gc);
 	return (0);
 }

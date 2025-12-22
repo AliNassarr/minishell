@@ -3,14 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   stage2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:13:22 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 00:18:44 by invader          ###   ########.fr       */
+/*   Updated: 2025/12/22 01:48:07 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+static void	restore_parentheses(char *str)
+{
+	int	i;
+
+	if (!str)
+		return ;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\x01')
+			str[i] = '(';
+		else if (str[i] == '\x02')
+			str[i] = ')';
+		i++;
+	}
+}
 
 void	assignoperator(t_parse_token *token, int i)
 {
@@ -91,6 +108,11 @@ int	checkforoperator(t_parse_token *tokens, int count)
 {
 	int	i;
 
+	if (count == 0)
+		return (0);
+	if (tokens[0].type == PIPE || tokens[0].type == AND
+		|| tokens[0].type == OR)
+		return (1);
 	i = 0;
 	while (i < count)
 	{
@@ -136,5 +158,11 @@ t_parse_token	*parsetokens(char **words, int count, t_head *head)
 		return (NULL);
 	assignfilenames(tokens, count);
 	assignrest(tokens, count);
+	i = 0;
+	while (i < count)
+	{
+		restore_parentheses(tokens[i].str);
+		i++;
+	}
 	return (tokens);
 }

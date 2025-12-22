@@ -6,14 +6,18 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 20:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/20 21:37:19 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 01:26:41 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 #include "../minishell.h"
+#include "../utils/ft_utils.h"
 #include <sys/wait.h>
 #include <string.h>
+#include <errno.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 /*
 ** extract_command - Extract command and arguments from tokens
@@ -32,7 +36,8 @@ char	**extract_command(t_parse_token *tokens, int count, t_head *head)
 	j = 0;
 	while (i < count)
 	{
-		if (tokens[i].type == CMD || tokens[i].type == ARG)
+		if ((tokens[i].type == CMD || tokens[i].type == ARG)
+			&& tokens[i].str && tokens[i].str[0] != '\0')
 		{
 			cmd_array[j] = tokens[i].str;
 			j++;
@@ -91,7 +96,7 @@ char	*find_command_path(char *cmd, char **env)
 		dir = strtok(NULL, ":");
 	}
 	free(path_copy);
-	return (cmd);
+	return (NULL);
 }
 
 /*
@@ -115,6 +120,11 @@ int	execute_simple_command(t_treenode *node, t_shell *shell, t_head *head)
 		return (execute_builtin(shell, cmd_array[0], cmd_array));
 	original_cmd = cmd_array[0];
 	cmd_path = find_command_path(cmd_array[0], shell->env);
+	if (!cmd_path)
+	{
+		fprintf(stderr, "minishell: %s: command not found\n", original_cmd);
+		return (127);
+	}
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 1);
@@ -122,6 +132,11 @@ int	execute_simple_command(t_treenode *node, t_shell *shell, t_head *head)
 	{
 		restoredefaults();
 		execve(cmd_path, cmd_array, shell->env);
+		if (errno == EACCES || errno == EISDIR)
+		{
+			perror("minishell");
+			exit(126);
+		}
 		perror("minishell");
 		exit(127);
 	}
@@ -154,9 +169,13 @@ int	handle_redirection(t_treenode *node, t_shell *shell, t_head *head)
 		if (fd == -1)
 			return (perror("minishell"), 1);
 		saved_fd = dup(STDOUT_FILENO);
+		if (saved_fd == -1)
+			return (close(fd), perror("minishell: dup"), 1);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
+		fflush(stdout);
 		exit_status = execute_ast(node->left, shell, head);
+		fflush(stdout);
 		dup2(saved_fd, STDOUT_FILENO);
 		close(saved_fd);
 		return (exit_status);
@@ -167,8 +186,45 @@ int	handle_redirection(t_treenode *node, t_shell *shell, t_head *head)
 		if (fd == -1)
 			return (perror("minishell"), 1);
 		saved_fd = dup(STDIN_FILENO);
+		if (saved_fd == -1)
+			return (close(fd), perror("minishell: dup"), 1);
 		dup2(fd, STDIN_FILENO);
 		close(fd);
+		exit_status = execute_ast(node->left, shell, head);
+		dup2(saved_fd, STDIN_FILENO);
+		close(saved_fd);
+		return (exit_status);
+	}
+	else if (type == HEREDOC)
+	{
+		int		pipe_fd[2];
+		char	*line;
+		char	*limiter;
+
+		if (pipe(pipe_fd) == -1)
+			return (perror("minishell: pipe"), 1);
+		limiter = node->right->tokens[0].str;
+		while (1)
+		{
+			write(STDOUT_FILENO, "> ", 2);
+			line = readline("");
+			if (!line)
+				break ;
+			if (ft_strcmp(line, limiter) == 0)
+			{
+				free(line);
+				break ;
+			}
+			write(pipe_fd[1], line, ft_strlen(line));
+			write(pipe_fd[1], "\n", 1);
+			free(line);
+		}
+		close(pipe_fd[1]);
+		saved_fd = dup(STDIN_FILENO);
+		if (saved_fd == -1)
+			return (close(pipe_fd[0]), perror("minishell: dup"), 1);
+		dup2(pipe_fd[0], STDIN_FILENO);
+		close(pipe_fd[0]);
 		exit_status = execute_ast(node->left, shell, head);
 		dup2(saved_fd, STDIN_FILENO);
 		close(saved_fd);
@@ -192,22 +248,24 @@ int	execute_pipe(t_treenode *node, t_shell *shell, t_head *head)
 		return (perror("pipe"), 1);
 	pid1 = fork();
 	if (pid1 == -1)
-		return (perror("fork"), 1);
+		return (close(pipefd[0]), close(pipefd[1]), perror("fork"), 1);
 	if (pid1 == 0)
 	{
 		close(pipefd[0]);
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
+		restoredefaults();
 		exit(execute_ast(node->left, shell, head));
 	}
 	pid2 = fork();
 	if (pid2 == -1)
-		return (perror("fork"), 1);
+		return (close(pipefd[0]), close(pipefd[1]), perror("fork"), 1);
 	if (pid2 == 0)
 	{
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
 		close(pipefd[0]);
+		restoredefaults();
 		exit(execute_ast(node->right, shell, head));
 	}
 	close(pipefd[0]);

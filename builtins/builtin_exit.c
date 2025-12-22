@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 22:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/16 21:43:30 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 03:35:00 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,15 @@ static int	is_numeric(const char *str)
 
 /*
 ** ft_atol - Convert string to long with overflow detection
-** Returns: the number, or 0 on overflow
+** Returns: 1 on success (value stored in *result), 0 on overflow
 */
-static long	ft_atol(const char *str)
+static int	ft_atol(const char *str, long *result)
 {
-	long	result;
+	long	num;
 	long	sign;
 	int		i;
 
-	result = 0;
+	num = 0;
 	sign = 1;
 	i = 0;
 	if (str[i] == '-' || str[i] == '+')
@@ -59,12 +59,15 @@ static long	ft_atol(const char *str)
 	}
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		if (result > (LONG_MAX - (str[i] - '0')) / 10)
+		if (sign == 1 && num > (LONG_MAX - (str[i] - '0')) / 10)
 			return (0);
-		result = result * 10 + (str[i] - '0');
+		if (sign == -1 && (unsigned long)num > ((unsigned long)LONG_MAX + 1 - (str[i] - '0')) / 10)
+			return (0);
+		num = num * 10 + (str[i] - '0');
 		i++;
 	}
-	return (result * sign);
+	*result = num * sign;
+	return (1);
 }
 
 /*
@@ -137,7 +140,7 @@ int	builtin_exit(t_shell *shell, char *args)
 	long	exit_code;
 	int		final_code;
 
-	printf("exit\n");
+	// fprintf(stderr, "exit\n");
 	if (!args || args[0] == '\0')
 	{
 		shell->should_exit = 1;
@@ -145,17 +148,23 @@ int	builtin_exit(t_shell *shell, char *args)
 	}
 	if (has_spaces(args))
 	{
-		printf("exit: too many arguments\n");
+		fprintf(stderr, "exit: too many arguments\n");
 		return (1);
 	}
 	if (!is_numeric(args))
 	{
-		printf("exit: %s: numeric argument required\n", args);
+		fprintf(stderr, "exit: %s: numeric argument required\n", args);
 		shell->exit_status = 2;
 		shell->should_exit = 1;
 		return (2);
 	}
-	exit_code = ft_atol(args);
+	if (!ft_atol(args, &exit_code))
+	{
+		fprintf(stderr, "exit: %s: numeric argument required\n", args);
+		shell->exit_status = 2;
+		shell->should_exit = 1;
+		return (2);
+	}
 	final_code = (int)((exit_code % 256 + 256) % 256);
 	shell->should_exit = 1;
 	return (final_code);

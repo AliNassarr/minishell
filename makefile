@@ -6,7 +6,7 @@
 #    By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/26 16:55:00 by invader           #+#    #+#              #
-#    Updated: 2025/12/20 21:26:26 by alnassar         ###   ########.fr        #
+#    Updated: 2025/12/22 01:29:59 by alnassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,6 @@ CFLAGS = -Wall -Wextra -Werror -g
 LDFLAGS = -lreadline
 
 SRCS =	minishell.c \
-		functions/functions.c \
 		gc/gc.c \
 		tokenization/helperr.c \
 		tokenization/helper.c \

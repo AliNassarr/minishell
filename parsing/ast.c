@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 21:40:19 by invader           #+#    #+#             */
-/*   Updated: 2025/12/21 19:05:38 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 01:58:33 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,7 @@ t_treenode	*createast(t_parse_token *tokens, int count, t_head *head)
 	int			right_count;
 
 	if (count == 0)
-		return (NULL);
-	oppos = findrediroperator(tokens, 0, count - 1);
-	if (oppos != -1)
-		return (createredirast(tokens, count, oppos, head));
+		return (intializenode(NULL, 0, head));
 	oppos = findpipeoperator(tokens, 0, count - 1);
 	if (oppos != -1)
 	{
@@ -134,6 +131,9 @@ t_treenode	*createast(t_parse_token *tokens, int count, t_head *head)
 		node->right = createast(&tokens[oppos + 1], right_count, head);
 		return (node);
 	}
+	oppos = findrediroperator(tokens, 0, count - 1);
+	if (oppos != -1)
+		return (createredirast(tokens, count, oppos, head));
 	return (intializenode(tokens, count, head));
 }
 
