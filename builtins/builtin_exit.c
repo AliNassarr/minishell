@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 22:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/22 03:35:00 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 23:48:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,15 +76,50 @@ static int	ft_atol(const char *str, long *result)
 static int	has_spaces(const char *str)
 {
 	int	i;
+	int	in_quote;
+	char	quote_char;
 
 	i = 0;
+	in_quote = 0;
+	quote_char = 0;
 	while (str[i])
 	{
-		if (str[i] == ' ')
+		if (!in_quote && (str[i] == '"' || str[i] == '\''))
+		{
+			in_quote = 1;
+			quote_char = str[i];
+		}
+		else if (in_quote && str[i] == quote_char)
+			in_quote = 0;
+		else if (!in_quote && str[i] == ' ')
 			return (1);
 		i++;
 	}
 	return (0);
+}
+
+/*
+** get_first_arg - Extract first argument before space
+*/
+static char	*get_first_arg(const char *str, t_head *gc)
+{
+	int		i;
+	char	*result;
+
+	i = 0;
+	while (str[i] && str[i] != ' ')
+		i++;
+	result = gcmalloc(gc, i + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (str[i] && str[i] != ' ')
+	{
+		result[i] = str[i];
+		i++;
+	}
+	result[i] = '\0';
+	return (result);
 }
 
 /*
@@ -139,6 +174,8 @@ int	builtin_exit(t_shell *shell, char *args)
 {
 	long	exit_code;
 	int		final_code;
+	char	*first_arg;
+	t_head	*gc;
 
 	// fprintf(stderr, "exit\n");
 	if (!args || args[0] == '\0')
@@ -148,6 +185,17 @@ int	builtin_exit(t_shell *shell, char *args)
 	}
 	if (has_spaces(args))
 	{
+		gc = intializehead();
+		first_arg = get_first_arg(args, gc);
+		if (!is_numeric(first_arg))
+		{
+			fprintf(stderr, "exit: %s: numeric argument required\n", first_arg);
+			shell->exit_status = 2;
+			shell->should_exit = 1;
+			gcallfree(gc);
+			return (2);
+		}
+		gcallfree(gc);
 		fprintf(stderr, "exit: too many arguments\n");
 		return (1);
 	}

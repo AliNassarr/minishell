@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 22:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/21 02:21:36 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 23:48:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,11 @@ int	builtin_unset(t_shell *shell, char *str, t_head *gc)
 	(void)gc;
 	if (!str || str[0] == '\0')
 		return (0);
+	if (str[0] == '-')
+	{
+		fprintf(stderr, "unset: %s: invalid option\n", str);
+		return (2);
+	}
 	if (!is_valid_unset_identifier(str))
 		return (0);
 	shell->env = unset_env_value(shell->env, str, shell->env_gc);

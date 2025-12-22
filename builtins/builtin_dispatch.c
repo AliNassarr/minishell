@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 20:15:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/22 21:07:43 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 23:48:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	execute_builtin(t_shell *shell, char *cmd, char **args)
 		gcallfree(gc);
 	}
 	else if (ft_strcmp(cmd, "pwd") == 0)
-		ret = builtin_pwd();
+		ret = builtin_pwd(joined_args);
 	else if (ft_strcmp(cmd, "export") == 0)
 	{
 		gc = intializehead();
@@ -130,7 +130,7 @@ int	execute_builtin(t_shell *shell, char *cmd, char **args)
 		gcallfree(gc);
 	}
 	else if (ft_strcmp(cmd, "env") == 0)
-		ret = builtin_env(shell);
+		ret = builtin_env(shell, args);
 	else if (ft_strcmp(cmd, "exit") == 0)
 	{
 		ret = builtin_exit(shell, joined_args);

@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 15:30:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/20 21:26:26 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 23:48:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,9 @@ int		ft_strlen(char *str);
 char	*ft_strcpy(char *dest, const char *src);
 char	*ft_strdup(char *s);
 char	*ft_strdup_gc(char *s, t_head *gc);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strcat(char *dest, const char *src);
+char	*ft_strtok(char *str, const char *delim);
+char	*ft_strjoin_gc(char *s1, char *s2, t_head *gc);
 
 #endif

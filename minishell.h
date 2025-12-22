@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:44:12 by invader           #+#    #+#             */
-/*   Updated: 2025/12/21 02:10:37 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/22 23:48:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,9 @@ int			env_array_size(char **env);
 /*
 ** Built-ins
 */
-int			builtin_pwd(void);
+int			builtin_pwd(char *args);
 void		builtin_echo(char *str);
-int			builtin_env(t_shell *shell);
+int			builtin_env(t_shell *shell, char **args);
 int			builtin_cd(t_shell *shell, char *path, t_head *gc);
 int			builtin_export(t_shell *shell, char *str, t_head *gc);
 int			builtin_unset(t_shell *shell, char *str, t_head *gc);
