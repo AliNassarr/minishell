@@ -27,6 +27,73 @@ int	env_array_size(char **env)
 }
 
 /*
+** ft_atoi_simple - Convert string to integer
+*/
+static int	ft_atoi_simple(const char *str)
+{
+	int	result;
+	int	i;
+
+	result = 0;
+	i = 0;
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (result);
+}
+
+/*
+** ft_itoa_simple - Convert integer to string
+*/
+static char	*ft_itoa_simple(int n, t_head *gc)
+{
+	char	buffer[12];
+	int		i;
+	int		len;
+	char	*result;
+
+	if (n == 0)
+		return (ft_strdup_gc("0", gc));
+	i = 0;
+	while (n > 0)
+	{
+		buffer[i++] = (n % 10) + '0';
+		n /= 10;
+	}
+	len = i;
+	result = gcmalloc(gc, len + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (len > 0)
+		result[i++] = buffer[--len];
+	result[i] = '\0';
+	return (result);
+}
+
+/*
+** increment_shlvl - Increment SHLVL environment variable
+*/
+void	increment_shlvl(char ***env, t_head *gc)
+{
+	char	*shlvl_str;
+	int		shlvl;
+	char	*new_shlvl;
+
+	shlvl_str = get_env_value(*env, "SHLVL");
+	if (shlvl_str)
+		shlvl = ft_atoi_simple(shlvl_str);
+	else
+		shlvl = 0;
+	shlvl++;
+	new_shlvl = ft_itoa_simple(shlvl, gc);
+	if (new_shlvl)
+		*env = set_env_value(*env, "SHLVL", new_shlvl, gc);
+}
+
+/*
 ** copy_environment - Copy environment variables array
 */
 char	**copy_environment(char **envp, t_head *gc)

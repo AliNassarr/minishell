@@ -45,6 +45,7 @@ int	init_shell(t_shell *shell, char **envp, t_head *env_gc)
 	shell->env = copy_environment(envp, env_gc);
 	if (!shell->env)
 		return (1);
+	increment_shlvl(&shell->env, env_gc);
 	shell->personal_path = gcmalloc(env_gc, sizeof(char *) * 1);
 	if (!shell->personal_path)
 		return (1);

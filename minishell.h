@@ -89,6 +89,7 @@ void		*gcmalloc(t_head *head, int size);
 ** Environment management
 */
 char		**copy_environment(char **envp, t_head *gc);
+void		increment_shlvl(char ***env, t_head *gc);
 char		*get_env_value(char **env, const char *key);
 char		**set_env_value(char **env, const char *key, const char *value,
 				t_head *gc);
