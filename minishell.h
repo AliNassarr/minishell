@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:44:12 by invader           #+#    #+#             */
-/*   Updated: 2025/12/23 02:08:27 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,5 +123,15 @@ void		printsignalmsg(int signal_num);
 int			is_builtin(const char *cmd);
 int			execute_builtin(t_shell *shell, char *cmd, char **args);
 int			execute_ast(t_treenode *node, t_shell *shell, t_head *head);
+int			dispatch_builtin(t_shell *shell, char *cmd, char **args,
+				char *joined);
+
+/*
+** Main helpers
+*/
+int			whitespacecheck(char *str);
+int			init_shell(t_shell *shell, char **envp, t_head *env_gc);
+void		handle_signal_after_readline(t_shell *shell);
+void		startminishell(char *str, t_shell *shell, char **envp);
 
 #endif

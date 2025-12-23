@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 16:32:12 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 21:26:26 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include <unistd.h>
 
 /* Forward declarations - actual definitions in minishell.h */
-typedef struct s_treenode	t_treenode;
-typedef struct s_shell		t_shell;
-typedef struct s_head		t_head;
+typedef struct s_treenode		t_treenode;
+typedef struct s_shell			t_shell;
+typedef struct s_head			t_head;
 typedef struct s_parse_token	t_parse_token;
 
 /* Main execution function */

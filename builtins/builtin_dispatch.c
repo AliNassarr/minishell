@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 20:15:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/22 23:48:42 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,42 +43,7 @@ int	is_builtin(const char *cmd)
 ** join_args - Join command arguments into a single string
 ** Returns: Joined string with arguments separated by spaces (must be freed)
 */
-char	*join_args(char **args)
-{
-	char	*result;
-	int		total_len;
-	int		i;
-	int		j;
-	int		k;
-
-	if (!args || !args[1])
-		return (NULL);
-	total_len = 0;
-	i = 1;
-	while (args[i])
-	{
-		total_len += ft_strlen(args[i]);
-		if (args[i + 1])
-			total_len++;
-		i++;
-	}
-	result = malloc(total_len + 1);
-	if (!result)
-		return (NULL);
-	i = 1;
-	k = 0;
-	while (args[i])
-	{
-		j = 0;
-		while (args[i][j])
-			result[k++] = args[i][j++];
-		if (args[i + 1])
-			result[k++] = ' ';
-		i++;
-	}
-	result[k] = '\0';
-	return (result);
-}
+char	*join_args(char **args);
 
 /*
 ** execute_builtin - Execute a builtin command
@@ -88,56 +53,9 @@ int	execute_builtin(t_shell *shell, char *cmd, char **args)
 {
 	char	*joined_args;
 	int		ret;
-	int		i;
-	t_head	*gc;
 
 	joined_args = join_args(args);
-	ret = 0;
-	if (ft_strcmp(cmd, ":") == 0)
-		ret = 0;
-	else if (ft_strcmp(cmd, "echo") == 0)
-	{
-		builtin_echo(joined_args);
-		ret = 0;
-	}
-	else if (ft_strcmp(cmd, "cd") == 0)
-	{
-		gc = intializehead();
-		ret = builtin_cd(shell, joined_args, gc);
-		gcallfree(gc);
-	}
-	else if (ft_strcmp(cmd, "pwd") == 0)
-		ret = builtin_pwd(joined_args);
-	else if (ft_strcmp(cmd, "export") == 0)
-	{
-		gc = intializehead();
-		if (!args[1])
-			ret = builtin_export(shell, NULL, gc);
-		else
-		{
-			i = 1;
-			while (args[i])
-				ret |= builtin_export(shell, args[i++], gc);
-		}
-		gcallfree(gc);
-	}
-	else if (ft_strcmp(cmd, "unset") == 0)
-	{
-		gc = intializehead();
-		i = 1;
-		while (args[i])
-			ret |= builtin_unset(shell, args[i++], gc);
-		gcallfree(gc);
-	}
-	else if (ft_strcmp(cmd, "env") == 0)
-		ret = builtin_env(shell, args);
-	else if (ft_strcmp(cmd, "exit") == 0)
-	{
-		ret = builtin_exit(shell, joined_args);
-		shell->exit_status = ret;
-	}
-	else
-		ret = 1;
+	ret = dispatch_builtin(shell, cmd, args, joined_args);
 	if (joined_args)
 		free(joined_args);
 	return (ret);

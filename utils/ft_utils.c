@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 15:30:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/22 23:48:42 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,102 +75,4 @@ char	*ft_strdup(char *s)
 		return (NULL);
 	ft_strcpy(dup, s);
 	return (dup);
-}
-
-char	*ft_strdup_gc(char *s, t_head *gc)
-{
-	char	*dup;
-	size_t	len;
-
-	if (!s)
-		return (NULL);
-	len = ft_strlen(s);
-	dup = gcmalloc(gc, sizeof(char) * (len + 1));
-	if (!dup)
-		return (NULL);
-	ft_strcpy(dup, s);
-	return (dup);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s)
-	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	if ((char)c == '\0')
-		return ((char *)s);
-	return (NULL);
-}
-
-char	*ft_strcat(char *dest, const char *src)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (dest[i])
-		i++;
-	j = 0;
-	while (src[j])
-	{
-		dest[i + j] = src[j];
-		j++;
-	}
-	dest[i + j] = '\0';
-	return (dest);
-}
-
-char	*ft_strtok(char *str, const char *delim)
-{
-	static char	*last;
-	char		*token;
-
-	if (str)
-		last = str;
-	if (!last)
-		return (NULL);
-	while (*last && ft_strchr(delim, *last))
-		last++;
-	if (!*last)
-		return (NULL);
-	token = last;
-	while (*last && !ft_strchr(delim, *last))
-		last++;
-	if (*last)
-	{
-		*last = '\0';
-		last++;
-	}
-	return (token);
-}
-
-char	*ft_strjoin_gc(char *s1, char *s2, t_head *gc)
-{
-	char	*result;
-	int		len1;
-	int		len2;
-	int		i;
-	int		j;
-
-	if (!s1 || !s2)
-		return (NULL);
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	result = gcmalloc(gc, sizeof(char) * (len1 + len2 + 1));
-	if (!result)
-		return (NULL);
-	i = 0;
-	while (s1[i])
-	{
-		result[i] = s1[i];
-		i++;
-	}
-	j = 0;
-	while (s2[j])
-		result[i++] = s2[j++];
-	result[i] = '\0';
-	return (result);
 }

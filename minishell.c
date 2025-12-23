@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:43:39 by invader           #+#    #+#             */
-/*   Updated: 2025/12/23 02:08:27 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,100 +83,4 @@ void	handle_signal_after_readline(t_shell *shell)
 /*
 ** startminishell - Parse and execute a command line
 */
-void	startminishell(char *str, t_shell *shell, char **envp)
-{
-	char		*fixed;
-	char		**pp;
-	t_treenode	*node;
-	t_head		*head;
-	int			exit_status;
-
-	(void)envp;
-	head = intializehead();
-	if (!head)
-		return ;
-	pp = shell->env;
-	if (!quotecheck(str))
-	{
-		fprintf(stderr, "minishell: syntax error: unclosed quotes\n");
-		shell->exit_status = 2;
-		g_last_exit_status = 2;
-		return (gcallfree(head));
-	}
-	fixed = fixspaces(str, head, 0, 0);
-	if (!fixed)
-		return (gcallfree(head));
-	if (fixed[0] == '\0' || !whitespacecheck(fixed))
-	{
-		shell->exit_status = 0;
-		g_last_exit_status = 0;
-		return (gcallfree(head));
-	}
-	node = asthelper(fixed, head, pp);
-	if (!node)
-	{
-		if (fixed[0] == '\0' || !whitespacecheck(fixed))
-		{
-			shell->exit_status = 0;
-			g_last_exit_status = 0;
-			return (gcallfree(head));
-		}
-		fprintf(stderr, "minishell: syntax error near unexpected token\n");
-		shell->exit_status = 2;
-		g_last_exit_status = 2;
-		return (gcallfree(head));
-	}
-	// print_ast(node); // DEBUG
-	setupexecution();
-	exit_status = execute_ast(node, shell, head);
-	setupinteractive();
-	shell->exit_status = exit_status;
-	g_last_exit_status = exit_status;
-	gcallfree(head);
-}
-
-/*
-** main - Main entry point for minishell
-** Initializes shell, sets up signals, and runs the REPL loop
-*/
-int	main(int argc, char **argv, char **envp)
-{
-	char		*str;
-	t_shell		shell;
-	t_head		*env_gc;
-
-	(void)argv;
-	if (argc != 1)
-	{
-		printf("Usage: %s\n", argv[0]);
-		return (1);
-	}
-	env_gc = intializehead();
-	if (!env_gc || init_shell(&shell, envp, env_gc))
-	{
-		printf("minishell: initialization failed\n");
-		return (1);
-	}
-	setupinteractive();
-	while (1)
-	{
-		str = readline("minishell$ ");
-		handle_signal_after_readline(&shell);
-		if (!str)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (str[0] && whitespacecheck(str))
-		{
-			add_history(str);
-			startminishell(str, &shell, envp);
-		}
-		free(str);
-		if (shell.should_exit)
-			break ;
-	}
-	rl_clear_history();
-	gcallfree(env_gc);
-	return (shell.exit_status);
-}
+void	startminishell(char *str, t_shell *shell, char **envp);

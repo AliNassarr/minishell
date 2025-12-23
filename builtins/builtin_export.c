@@ -6,13 +6,14 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 22:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/22 23:48:42 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/23 03:57:15 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include "../utils/ft_utils.h"
 
+char	*extract_key(const char *str, int equals_pos, t_head *gc);
 /*
 ** is_valid_identifier - Check if variable name is valid
 ** 
@@ -21,66 +22,14 @@
 ** - Can contain letters, digits, underscores
 ** - Cannot be empty
 */
-static int	is_valid_identifier(const char *str)
-{
-	int	i;
-
-	if (!str || !str[0])
-		return (0);
-	if (str[0] != '_' && (str[0] < 'a' || str[0] > 'z')
-		&& (str[0] < 'A' || str[0] > 'Z'))
-		return (0);
-	i = 1;
-	while (str[i] && str[i] != '=')
-	{
-		if (str[i] != '_' && (str[i] < 'a' || str[i] > 'z')
-			&& (str[i] < 'A' || str[i] > 'Z')
-			&& (str[i] < '0' || str[i] > '9'))
-			return (0);
-		i++;
-	}
-	return (1);
-}
+int		is_valid_identifier(const char *str);
 
 /*
 ** parse_export_arg - Split "KEY=VALUE" into key and value
 **
 ** Returns: index of '=' character, or -1 if no '=' found
 */
-static int	find_equals_sign(const char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-/*
-** extract_key - Extract key from "KEY=VALUE"
-*/
-static char	*extract_key(const char *str, int equals_pos, t_head *gc)
-{
-	char	*key;
-	int		i;
-
-	key = gcmalloc(gc, equals_pos + 1);
-	if (!key)
-		return (NULL);
-	i = 0;
-	while (i < equals_pos)
-	{
-		key[i] = str[i];
-		i++;
-	}
-	key[i] = '\0';
-	return (key);
-}
+int		find_equals_sign(const char *str);
 
 /*
 ** print_export - Print all env vars in "declare -x" format
@@ -148,72 +97,17 @@ static void	print_export(t_shell *shell)
 ** has_special_chars_in_value - Check if value contains special chars
 ** that would cause syntax errors: &, |, (, )
 */
-static int	has_special_chars_in_value(const char *str)
-{
-	int	i;
-	int	in_quotes;
-	char	quote_char;
+int		has_special_chars_in_value(const char *str);
 
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	if (str[i] != '=')
-		return (0);
-	i++;
-	in_quotes = 0;
-	quote_char = 0;
-	while (str[i])
-	{
-		if (!in_quotes && (str[i] == '"' || str[i] == '\''))
-		{
-			in_quotes = 1;
-			quote_char = str[i];
-		}
-		else if (in_quotes && str[i] == quote_char)
-			in_quotes = 0;
-		else if (!in_quotes && (str[i] == '&' || str[i] == '|'
-			|| str[i] == '(' || str[i] == ')'))
-			return (1);
-		i++;
-	}
-	return (0);
-}
+int		process_export_arg(t_shell *shell, char *str);
 
 int	builtin_export(t_shell *shell, char *str, t_head *gc)
 {
-	int		equals_pos;
-	char	*key;
-	char	*value;
-
 	(void)gc;
 	if (!str || str[0] == '\0')
 	{
 		print_export(shell);
 		return (0);
 	}
-	if (str[0] == '-')
-	{
-		fprintf(stderr, "export: %s: invalid option\n", str);
-		return (2);
-	}
-	if (has_special_chars_in_value(str))
-	{
-		fprintf(stderr, "export: `%s': not a valid identifier\n", str);
-		return (2);
-	}
-	if (!is_valid_identifier(str))
-	{
-		fprintf(stderr, "export: `%s': not a valid identifier\n", str);
-		return (1);
-	}
-	equals_pos = find_equals_sign(str);
-	if (equals_pos == -1)
-		return (0);
-	key = extract_key(str, equals_pos, shell->env_gc);
-	if (!key)
-		return (1);
-	value = &str[equals_pos + 1];
-	shell->env = set_env_value(shell->env, key, value,
-		shell->env_gc);
-	return (0);
+	return (process_export_arg(shell, str));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   astprint.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:15:01 by invader           #+#    #+#             */
-/*   Updated: 2025/12/19 23:17:22 by invader          ###   ########.fr       */
+/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,37 +26,7 @@ void	print_tokens(t_parse_token *tokens, int count)
 	}
 }
 
-void	print_ast_helper(t_treenode *node, int depth, char *prefix)
-{
-	int	i;
-
-	if (!node)
-		return ;
-	i = 0;
-	while (i < depth)
-	{
-		printf("    ");
-		i++;
-	}
-	printf("%s", prefix);
-	if (node->token_count == 1 && (node->tokens[0].type == PIPE
-			|| node->tokens[0].type == OR || node->tokens[0].type == AND
-			|| node->tokens[0].type == REDIR_IN || node->tokens[0].type == REDIR_OUT
-			|| node->tokens[0].type == REDIR_APPEND || node->tokens[0].type == HEREDOC))
-	{
-		printf("[OP: %s]\n", node->tokens[0].str);
-	}
-	else
-	{
-		printf("[");
-		print_tokens(node->tokens, node->token_count);
-		printf("]\n");
-	}
-	if (node->left)
-		print_ast_helper(node->left, depth + 1, "L: ");
-	if (node->right)
-		print_ast_helper(node->right, depth + 1, "R: ");
-}
+void	print_ast_helper(t_treenode *node, int depth, char *prefix);
 
 void	print_ast(t_treenode *root)
 {
