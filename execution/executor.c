@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 20:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 04:05:00 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/23 14:02:35 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,6 @@ int	execute_logical(t_treenode *node, t_shell *shell, t_head *head)
 	return (1);
 }
 
-/*
-** execute_ast - Main executor function that traverses the AST
-** Returns: Exit status of the executed command(s)
-*/
 int	execute_ast(t_treenode *node, t_shell *shell, t_head *head)
 {
 	if (!node)

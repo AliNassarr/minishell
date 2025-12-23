@@ -6,16 +6,13 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 20:10:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 02:08:27 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/23 14:02:36 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include "ft_utils.h"
 
-/*
-** env_array_size - Count the number of environment variables
-*/
 int	env_array_size(char **env)
 {
 	int	i;
@@ -26,9 +23,8 @@ int	env_array_size(char **env)
 	return (i);
 }
 
-/*
-** copy_environment - Copy environment variables array
-*/
+void	increment_shlvl(char ***env, t_head *gc);
+
 char	**copy_environment(char **envp, t_head *gc)
 {
 	char	**new_env;
@@ -51,9 +47,6 @@ char	**copy_environment(char **envp, t_head *gc)
 	return (new_env);
 }
 
-/*
-** get_env_value - Get value of environment variable by key
-*/
 char	*get_env_value(char **env, const char *key)
 {
 	int		i;
@@ -76,3 +69,8 @@ char	*get_env_value(char **env, const char *key)
 	}
 	return (NULL);
 }
+
+char	**set_env_value(char **env, const char *key, const char *value,
+		t_head *gc);
+
+char	**unset_env_value(char **env, const char *key, t_head *gc);
