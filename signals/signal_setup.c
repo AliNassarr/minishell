@@ -6,19 +6,25 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 02:55:28 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 04:09:18 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signals.h"
 #include <string.h>
 #include <signal.h>
+#include <termios.h>
+#include <unistd.h>
 
 void	setupinteractive(void)
 {
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
+	struct termios		term;
 
+	tcgetattr(STDIN_FILENO, &term);
+	term.c_lflag &= ~ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	memset(&sa_int, 0, sizeof(sa_int));
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = SA_RESTART;

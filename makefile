@@ -6,7 +6,7 @@
 #    By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/26 16:55:00 by invader           #+#    #+#              #
-#    Updated: 2025/12/23 13:51:59 by alnassar         ###   ########.fr        #
+#    Updated: 2025/12/24 03:16:33 by alnassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRCS =	minishell.c \
 		execution/executor_simple.c \
 		execution/executor_redir.c \
 		execution/executor_pipe.c \
+		execution/heredoc_prepare.c \
 		builtins/builtin_dispatch.c \
 		builtins/builtin_dispatch_helpers.c \
 		builtins/builtin_dispatch_join.c \

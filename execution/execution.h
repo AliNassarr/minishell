@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 16:32:12 by invader           #+#    #+#             */
-/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 03:16:33 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ typedef struct s_parse_token	t_parse_token;
 
 /* Main execution function */
 int		execute_ast(t_treenode *node, t_shell *shell, t_head *head);
+
+/* Heredoc preparation */
+void	prepare_heredocs(t_treenode *node);
 
 /* Helper functions */
 char	**extract_command(t_parse_token *tokens, int count, t_head *head);

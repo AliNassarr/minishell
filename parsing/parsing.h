@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:03:14 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 00:49:36 by invader          ###   ########.fr       */
+/*   Updated: 2025/12/24 03:16:33 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_treenode
 {
 	t_parse_token		*tokens;
 	int					token_count;
+	int					heredoc_fd;
 	struct s_treenode	*left;
 	struct s_treenode	*right;
 }	t_treenode;

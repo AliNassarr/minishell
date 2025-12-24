@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 21:40:19 by invader           #+#    #+#             */
-/*   Updated: 2025/12/22 01:58:33 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 03:16:33 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_treenode	*intializenode(t_parse_token *tokens, int count, t_head *head)
 		return (NULL);
 	node->tokens = tokens;
 	node->token_count = count;
+	node->heredoc_fd = -1;
 	node->left = NULL;
 	node->right = NULL;
 	return (node);

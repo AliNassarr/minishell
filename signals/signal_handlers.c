@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 02:55:35 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 04:09:18 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,12 @@ volatile sig_atomic_t	g_signal_flag = 0;
 
 void	interactivehandler(int sig)
 {
-	(void)sig;
-	g_signal_flag = SIGINT;
-	write(1, "\n", 1);
+	if (sig == SIGINT)
+	{
+		g_signal_flag = SIGINT;
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
