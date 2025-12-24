@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 04:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 13:45:54 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 04:25:36 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 static void	handle_pipe_child_left(int *pipefd, t_treenode *node,
 		t_shell *shell, t_head *head)
 {
+	extern int	g_in_parent;
+
+	g_in_parent = 0;
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
@@ -27,6 +30,9 @@ static void	handle_pipe_child_left(int *pipefd, t_treenode *node,
 static void	handle_pipe_child_right(int *pipefd, t_treenode *node,
 		t_shell *shell, t_head *head)
 {
+	extern int	g_in_parent;
+
+	g_in_parent = 0;
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
@@ -40,6 +46,7 @@ int	execute_pipe(t_treenode *node, t_shell *shell, t_head *head)
 	pid_t	pid1;
 	pid_t	pid2;
 	int		status;
+	int		status2;
 
 	if (pipe(pipefd) == -1)
 		return (perror("pipe"), 1);
@@ -56,6 +63,6 @@ int	execute_pipe(t_treenode *node, t_shell *shell, t_head *head)
 	close(pipefd[0]);
 	close(pipefd[1]);
 	waitpid(pid1, &status, 0);
-	waitpid(pid2, &status, 0);
-	return (checksignalstatus(status));
+	waitpid(pid2, &status2, 0);
+	return (checksignalstatus(status2));
 }

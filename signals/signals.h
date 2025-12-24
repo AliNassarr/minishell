@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/20 16:43:24 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 04:25:36 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 ** and used in other files.
 */
 extern volatile sig_atomic_t	g_signal_flag;
+extern int						g_in_parent;
 
 /*
 ** SIGNAL SETUP FUNCTIONS (defined in signal_setup.c)

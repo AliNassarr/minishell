@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 04:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 04:04:07 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 04:25:36 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,16 @@
 static int	execute_external_cmd(char **cmd_array, char **env, char *cmd_path,
 		char *original_cmd)
 {
-	pid_t	pid;
-	int		status;
+	pid_t		pid;
+	int			status;
+	extern int	g_in_parent;
 
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 1);
 	if (pid == 0)
 	{
+		g_in_parent = 0;
 		restoredefaults();
 		execve(cmd_path, cmd_array, env);
 		if (errno == EACCES || errno == EISDIR)

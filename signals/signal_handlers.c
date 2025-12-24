@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/24 04:09:18 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 04:25:36 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <readline/history.h>
 
 volatile sig_atomic_t	g_signal_flag = 0;
+int						g_in_parent = 1;
 
 void	interactivehandler(int sig)
 {
