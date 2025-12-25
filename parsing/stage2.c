@@ -6,28 +6,11 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 00:13:22 by invader           #+#    #+#             */
-/*   Updated: 2025/12/22 01:48:07 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/25 01:13:17 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-static void	restore_parentheses(char *str)
-{
-	int	i;
-
-	if (!str)
-		return ;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\x01')
-			str[i] = '(';
-		else if (str[i] == '\x02')
-			str[i] = ')';
-		i++;
-	}
-}
 
 void	assignoperator(t_parse_token *token, int i)
 {
@@ -116,53 +99,26 @@ int	checkforoperator(t_parse_token *tokens, int count)
 	i = 0;
 	while (i < count)
 	{
-		if (tokens[i].type == PIPE || tokens[i].type == AND
-			|| tokens[i].type == OR || tokens[i].type == REDIR_IN
-			|| tokens[i].type == REDIR_OUT || tokens[i].type == REDIR_APPEND
-			|| tokens[i].type == HEREDOC)
-		{
-			if (i + 1 >= count)
-				return (1);
-			if (tokens[i + 1].type == PIPE || tokens[i + 1].type == AND
-				|| tokens[i + 1].type == OR)
-				return (1);
-			if ((tokens[i].type == REDIR_IN || tokens[i].type == REDIR_OUT
-					|| tokens[i].type == REDIR_APPEND
-					|| tokens[i].type == HEREDOC)
-				&& tokens[i + 1].type != UNKNOWN)
-				return (1);
-		}
+		if (check_operator_error(tokens, i, count))
+			return (1);
 		i++;
 	}
 	return (0);
 }
 
-t_parse_token	*parsetokens(char **words, int count, t_head *head)
+t_parse_token	*parsetokens(char **words, int count, t_head *head,
+	char *joined_str)
 {
 	t_parse_token	*tokens;
-	int				i;
 
 	tokens = gcmalloc(head, sizeof(t_parse_token) * count);
 	if (!tokens)
 		return (NULL);
-	i = 0;
-	while (i < count)
-	{
-		tokens[i].str = words[i];
-		tokens[i].type = UNKNOWN;
-		if (ft_strlen(tokens[i].str) <= 2)
-			assignoperator(tokens, i);
-		i++;
-	}
+	assign_tokens_types(tokens, count, words, joined_str);
 	if (checkforoperator(tokens, count))
 		return (NULL);
 	assignfilenames(tokens, count);
 	assignrest(tokens, count);
-	i = 0;
-	while (i < count)
-	{
-		restore_parentheses(tokens[i].str);
-		i++;
-	}
+	restore_and_finalize(tokens, count);
 	return (tokens);
 }

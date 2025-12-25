@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 22:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/22 23:48:42 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 21:13:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,9 @@ int	builtin_unset(t_shell *shell, char *str, t_head *gc)
 		return (0);
 	if (str[0] == '-')
 	{
-		fprintf(stderr, "unset: %s: invalid option\n", str);
+		ft_putstr_fd("unset: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putendl_fd(": invalid option", 2);
 		return (2);
 	}
 	if (!is_valid_unset_identifier(str))

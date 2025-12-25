@@ -1,0 +1,384 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║            MINISHELL FORBIDDEN FUNCTIONS AUDIT REPORT                    ║
+║                          STEP 1: AUDIT ONLY                              ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+Date: December 24, 2025
+Project: Minishell (42 School)
+Audit Performed By: Automated Scanner + Manual Review
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EXECUTIVE SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 Total Forbidden Function Calls Found: 25
+📁 Files Affected: 14
+⚠️  Severity: MEDIUM (no critical logic changes required)
+
+┌─────────────┬───────┬──────────────┬────────────────────────────────┐
+│ Function    │ Count │ Status       │ Replacement                    │
+├─────────────┼───────┼──────────────┼────────────────────────────────┤
+│ fprintf     │  17   │ ❌ MISSING   │ ft_putstr_fd + ft_putendl_fd   │
+│ memset      │   4   │ ❌ MISSING   │ ft_memset                      │
+│ strtok      │   2   │ ⚠️  PARTIAL  │ ft_strtok (verify)             │
+│ strncmp     │   1   │ ✅ EXISTS    │ ft_strncmp (ready)             │
+│ sprintf     │   1   │ ❌ MISSING   │ ft_itoa                        │
+└─────────────┴───────┴──────────────┴────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DETAILED FINDINGS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+═══════════════════════════════════════════════════════════════════════════
+1. MEMSET (4 occurrences)
+═══════════════════════════════════════════════════════════════════════════
+
+FILE: signals/signal_setup.c
+IMPACT: Signal handling initialization
+PRIORITY: HIGH (blocks compilation)
+
+Occurrences:
+  Line 28:  memset(&sa_int, 0, sizeof(sa_int));
+  Line 33:  memset(&sa_quit, 0, sizeof(sa_quit));
+  Line 44:  memset(&sa_ignore, 0, sizeof(sa_ignore));
+  Line 56:  memset(&sa_default, 0, sizeof(sa_default));
+
+REPLACEMENT FUNCTION:
+  void *ft_memset(void *s, int c, size_t n)
+  {
+      unsigned char *ptr;
+      size_t i;
+
+      ptr = (unsigned char *)s;
+      i = 0;
+      while (i < n)
+      {
+          ptr[i] = (unsigned char)c;
+          i++;
+      }
+      return (s);
+  }
+
+ACTION: Add to utils/ft_utils2.c
+
+═══════════════════════════════════════════════════════════════════════════
+2. FPRINTF (17 occurrences across 11 files)
+═══════════════════════════════════════════════════════════════════════════
+
+IMPACT: Error message output to stderr
+PRIORITY: HIGH (most widespread issue)
+
+FILES AFFECTED:
+  • builtins/builtin_cd.c (1 occurrence)
+  • builtins/builtin_env.c (2 occurrences)
+  • builtins/builtin_exit_helpers.c (2 occurrences)
+  • builtins/builtin_exit_helpers2.c (1 occurrence)
+  • builtins/builtin_export_helpers.c (3 occurrences)
+  • builtins/builtin_export_helpers2.c (3 occurrences)
+  • builtins/builtin_pwd_helpers.c (1 occurrence)
+  • builtins/builtin_unset.c (1 occurrence)
+  • minishell_helpers.c (2 occurrences)
+  • execution/executor_simple.c (1 occurrence)
+
+DETAILED LISTING:
+
+builtins/builtin_cd.c:53
+  fprintf(stderr, "cd: %s: invalid option\n", path);
+  
+builtins/builtin_env.c:43
+  fprintf(stderr, "env: %s: No such file or directory\n", args[1]);
+  
+builtins/builtin_env.c:63
+  fprintf(stderr, "env: %s: No such file or directory\n", args[1]);
+  
+builtins/builtin_exit_helpers.c:23
+  fprintf(stderr, "exit: %s: numeric argument required\n", first_arg);
+  
+builtins/builtin_exit_helpers.c:30
+  fprintf(stderr, "exit: too many arguments\n");
+  
+builtins/builtin_exit_helpers2.c:20
+  fprintf(stderr, "exit: %s: numeric argument required\n", args);
+  
+builtins/builtin_export_helpers.c:24
+  fprintf(stderr, "export: %s: invalid option\n", str);
+  
+builtins/builtin_export_helpers.c:29
+  fprintf(stderr, "export: `%s': not a valid identifier\n", str);
+  
+builtins/builtin_export_helpers.c:34
+  fprintf(stderr, "export: `%s': not a valid identifier\n", str);
+  
+builtins/builtin_export_helpers2.c:24
+  fprintf(stderr, "export: %s: invalid option\n", str);
+  
+builtins/builtin_export_helpers2.c:34
+  fprintf(stderr, "export: `%s': not a valid identifier\n", str);
+  
+builtins/builtin_export_helpers2.c:44
+  fprintf(stderr, "export: `%s': not a valid identifier\n", str);
+  
+builtins/builtin_pwd_helpers.c:29
+  fprintf(stderr, "pwd: %s: invalid option\n", args);
+  
+builtins/builtin_unset.c:85
+  fprintf(stderr, "unset: %s: invalid option\n", str);
+  
+minishell_helpers.c:18
+  fprintf(stderr, "minishell: syntax error: unclosed quotes\n");
+  
+minishell_helpers.c:31
+  fprintf(stderr, "minishell: syntax error near unexpected token\n");
+  
+execution/executor_simple.c:64
+  fprintf(stderr, "minishell: %s: command not found\n", original_cmd);
+
+REPLACEMENT FUNCTIONS:
+  void ft_putstr_fd(char *s, int fd)
+  {
+      if (!s)
+          return ;
+      write(fd, s, ft_strlen(s));
+  }
+
+  void ft_putendl_fd(char *s, int fd)
+  {
+      ft_putstr_fd(s, fd);
+      write(fd, "\n", 1);
+  }
+
+REPLACEMENT PATTERNS:
+
+  Pattern 1: Simple message
+    BEFORE: fprintf(stderr, "error message\n");
+    AFTER:  ft_putendl_fd("error message", 2);
+
+  Pattern 2: Message with one variable
+    BEFORE: fprintf(stderr, "cmd: %s: error\n", var);
+    AFTER:  ft_putstr_fd("cmd: ", 2);
+            ft_putstr_fd(var, 2);
+            ft_putendl_fd(": error", 2);
+
+  Pattern 3: Message with backticks/quotes
+    BEFORE: fprintf(stderr, "export: `%s': error\n", str);
+    AFTER:  ft_putstr_fd("export: `", 2);
+            ft_putstr_fd(str, 2);
+            ft_putendl_fd("': error", 2);
+
+ACTION: Add ft_putstr_fd and ft_putendl_fd to utils/ft_utils2.c
+
+═══════════════════════════════════════════════════════════════════════════
+3. STRNCMP (1 occurrence)
+═══════════════════════════════════════════════════════════════════════════
+
+FILE: execution/executor_helpers.c:79
+IMPACT: PATH environment variable lookup
+PRIORITY: LOW (easy fix, function already exists)
+
+Code:
+  if (strncmp(env[i], "PATH=", 5) == 0)
+
+REPLACEMENT: ft_strncmp (ALREADY IMPLEMENTED IN utils/ft_utils.c)
+
+ACTION: Simple find-replace
+  BEFORE: strncmp
+  AFTER:  ft_strncmp
+
+═══════════════════════════════════════════════════════════════════════════
+4. STRTOK (2 occurrences)
+═══════════════════════════════════════════════════════════════════════════
+
+FILE: execution/executor_helpers.c
+IMPACT: PATH tokenization for command lookup
+PRIORITY: MEDIUM
+
+Occurrences:
+  Line 51: dir = strtok(path_copy, ":");
+  Line 64: dir = strtok(NULL, ":");
+
+STATUS: Declared in ft_utils.h, implementation needs verification
+
+REPLACEMENT FUNCTION:
+  char *ft_strtok(char *str, const char *delim)
+  {
+      static char *last;
+      char *token_start;
+
+      if (str)
+          last = str;
+      if (!last)
+          return (NULL);
+      while (*last && ft_strchr(delim, *last))
+          last++;
+      if (*last == '\0')
+          return (NULL);
+      token_start = last;
+      while (*last && !ft_strchr(delim, *last))
+          last++;
+      if (*last)
+      {
+          *last = '\0';
+          last++;
+      }
+      return (token_start);
+  }
+
+ACTION: Verify implementation exists in utils/, add if missing
+
+═══════════════════════════════════════════════════════════════════════════
+5. SPRINTF (1 occurrence)
+═══════════════════════════════════════════════════════════════════════════
+
+FILE: tokenization/expanding_helpers.c:22
+IMPACT: Exit status string conversion
+PRIORITY: MEDIUM
+
+Code:
+  sprintf(exit_status_str, "%d", (int)(g_signal >> 16));
+
+REPLACEMENT: ft_itoa + string copy
+
+REPLACEMENT FUNCTION:
+  char *ft_itoa(int n)
+  {
+      char *str;
+      int len;
+      long nb;
+      
+      nb = n;
+      len = (nb <= 0) ? 1 : 0;
+      while (n)
+      {
+          n /= 10;
+          len++;
+      }
+      str = malloc(sizeof(char) * (len + 1));
+      if (!str)
+          return (NULL);
+      str[len] = '\0';
+      if (nb < 0)
+      {
+          str[0] = '-';
+          nb = -nb;
+      }
+      if (nb == 0)
+          str[0] = '0';
+      else
+      {
+          while (nb > 0)
+          {
+              str[--len] = (nb % 10) + '0';
+              nb /= 10;
+          }
+      }
+      return (str);
+  }
+
+REPLACEMENT STRATEGY:
+  Instead of: sprintf(exit_status_str, "%d", value);
+  Use:        temp = ft_itoa(value);
+              ft_strcpy(exit_status_str, temp);
+              free(temp);
+
+ACTION: Add ft_itoa to utils/ft_utils3.c
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IMPLEMENTATION PLAN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PHASE 1: Implement Missing Functions (utils/)
+  ☐ Add ft_memset to utils/ft_utils2.c
+  ☐ Add ft_putstr_fd to utils/ft_utils2.c
+  ☐ Add ft_putendl_fd to utils/ft_utils2.c
+  ☐ Add ft_itoa to utils/ft_utils3.c
+  ☐ Verify/add ft_strtok to utils/ft_utils3.c
+  ☐ Update utils/ft_utils.h with all function prototypes
+
+PHASE 2: Replace Function Calls
+  ☐ Replace memset → ft_memset (signals/signal_setup.c)
+  ☐ Replace strncmp → ft_strncmp (execution/executor_helpers.c)
+  ☐ Replace strtok → ft_strtok (execution/executor_helpers.c)
+  ☐ Replace sprintf → ft_itoa (tokenization/expanding_helpers.c)
+  ☐ Replace fprintf → ft_putstr_fd/ft_putendl_fd (11 files)
+
+PHASE 3: Compilation & Testing
+  ☐ Compile: make re
+  ☐ Fix any compilation errors
+  ☐ Run norminette on all modified files
+  ☐ Functional testing (basic commands)
+  ☐ Run project tester
+  ☐ Memory leak check with valgrind
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RISK ASSESSMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Risk Level: MEDIUM
+
+LOW RISK:
+  • ft_strncmp replacement (simple, function exists)
+  • ft_memset replacement (straightforward)
+  
+MEDIUM RISK:
+  • ft_strtok replacement (stateful function, needs careful testing)
+  • ft_sprintf replacement (logic change in conversion)
+  • fprintf replacement (requires multiple function calls, verbose)
+
+HIGH RISK:
+  • None identified
+
+MITIGATION:
+  • Implement functions incrementally
+  • Test each replacement before moving to next
+  • Keep backup of working code
+  • Test edge cases thoroughly
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONSTRAINTS & REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MANDATORY:
+  ✅ No logic changes - only function replacements
+  ✅ No new dependencies
+  ✅ Follow 42 Norminette strictly
+  ✅ All functions must use only allowed system calls
+  ✅ Preserve exact behavior
+
+FORBIDDEN:
+  ❌ Code refactoring
+  ❌ New files unless absolutely necessary
+  ❌ Behavior changes
+  ❌ Additional library calls
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ESTIMATED TIME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Phase 1 (Implementation):    45 minutes
+Phase 2 (Replacement):        90 minutes
+Phase 3 (Testing):            45 minutes
+───────────────────────────────────────
+TOTAL ESTIMATED TIME:         3 hours
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONCLUSION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Status: ✅ AUDIT COMPLETE
+
+The codebase contains 25 forbidden function calls across 14 files. All
+forbidden functions can be replaced with ft_ equivalents without changing
+program logic or behavior.
+
+The main challenge is the fprintf replacement which requires breaking down
+formatted string output into multiple ft_putstr_fd calls. This is tedious
+but straightforward.
+
+All required ft_ functions follow standard libft implementations and are
+compatible with 42 School evaluation criteria.
+
+READY TO PROCEED TO STEP 2: Implementation & Replacement
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+End of Report
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

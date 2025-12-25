@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/24 04:25:36 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 20:24:01 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,14 @@
 #ifndef SIGNALS_H
 # define SIGNALS_H
 
+# ifndef _POSIX_C_SOURCE
+#  define _POSIX_C_SOURCE 200809L
+# endif
+
+# ifndef _DEFAULT_SOURCE
+#  define _DEFAULT_SOURCE
+# endif
+
 # include <signal.h>
 # include <sys/types.h>
 
@@ -27,9 +35,11 @@
 ** Global flag to track if a signal was received.
 ** This is declared as 'extern' because it's defined in signal_handlers.c
 ** and used in other files.
+** Bits 0-7: signal value
+** Bit 8: parent flag (0x100)
+** Bits 16-31: exit status (shifted left by 16)
 */
-extern volatile sig_atomic_t	g_signal_flag;
-extern int						g_in_parent;
+extern volatile sig_atomic_t	g_signal;
 
 /*
 ** SIGNAL SETUP FUNCTIONS (defined in signal_setup.c)

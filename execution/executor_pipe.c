@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 04:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/24 04:25:36 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 18:42:36 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 static void	handle_pipe_child_left(int *pipefd, t_treenode *node,
 		t_shell *shell, t_head *head)
 {
-	extern int	g_in_parent;
+	extern volatile sig_atomic_t	g_signal;
 
-	g_in_parent = 0;
+	g_signal &= ~0x100;
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
@@ -30,9 +30,9 @@ static void	handle_pipe_child_left(int *pipefd, t_treenode *node,
 static void	handle_pipe_child_right(int *pipefd, t_treenode *node,
 		t_shell *shell, t_head *head)
 {
-	extern int	g_in_parent;
+	extern volatile sig_atomic_t	g_signal;
 
-	g_in_parent = 0;
+	g_signal &= ~0x100;
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
@@ -48,6 +48,7 @@ int	execute_pipe(t_treenode *node, t_shell *shell, t_head *head)
 	int		status;
 	int		status2;
 
+	precreate_output_files(node->left);
 	if (pipe(pipefd) == -1)
 		return (perror("pipe"), 1);
 	pid1 = fork();

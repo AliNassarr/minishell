@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 21:13:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,21 @@
 
 static void	handle_quote_error(t_shell *shell, t_head *head)
 {
-	fprintf(stderr, "minishell: syntax error: unclosed quotes\n");
+	ft_putendl_fd("minishell: syntax error: unclosed quotes", 2);
 	shell->exit_status = 2;
-	g_last_exit_status = 2;
 	gcallfree(head);
 }
 
 static void	handle_empty_input(t_shell *shell, t_head *head)
 {
 	shell->exit_status = 0;
-	g_last_exit_status = 0;
 	gcallfree(head);
 }
 
 static void	handle_syntax_error(t_shell *shell, t_head *head)
 {
-	fprintf(stderr, "minishell: syntax error near unexpected token\n");
+	ft_putendl_fd("minishell: syntax error near unexpected token", 2);
 	shell->exit_status = 2;
-	g_last_exit_status = 2;
 	gcallfree(head);
 }
 

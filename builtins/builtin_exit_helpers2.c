@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 21:13:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ int		ft_atol(const char *str, long *result);
 
 static int	handle_non_numeric(t_shell *shell, char *args)
 {
-	fprintf(stderr, "exit: %s: numeric argument required\n", args);
+	ft_putstr_fd("exit: ", 2);
+	ft_putstr_fd(args, 2);
+	ft_putendl_fd(": numeric argument required", 2);
 	shell->exit_status = 2;
 	shell->should_exit = 1;
 	return (2);

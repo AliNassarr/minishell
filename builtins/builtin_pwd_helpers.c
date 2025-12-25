@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 21:13:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ int	check_pwd_options(char *args)
 		if (args[i + 1] == '-' && (args[i + 2] == ' '
 				|| args[i + 2] == '\0'))
 			return (0);
-		fprintf(stderr, "pwd: %s: invalid option\n", args);
+		ft_putstr_fd("pwd: ", 2);
+		ft_putstr_fd(args, 2);
+		ft_putendl_fd(": invalid option", 2);
 		return (2);
 	}
 	return (0);

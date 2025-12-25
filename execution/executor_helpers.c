@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 04:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 04:04:07 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 21:13:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,23 @@ static char	*search_in_path(char *cmd, char *path_env)
 	char	*dir;
 	char	*full_path;
 
-	path_copy = strdup(path_env);
+	path_copy = ft_strdup(path_env);
 	if (!path_copy)
 		return (NULL);
-	dir = strtok(path_copy, ":");
+	dir = ft_strtok(path_copy, ":");
 	while (dir)
 	{
-		full_path = malloc(strlen(dir) + strlen(cmd) + 2);
+		full_path = malloc(ft_strlen(dir) + ft_strlen(cmd) + 2);
 		if (full_path)
 		{
-			strcpy(full_path, dir);
-			strcat(full_path, "/");
-			strcat(full_path, cmd);
+			ft_strcpy(full_path, dir);
+			ft_strcat(full_path, "/");
+			ft_strcat(full_path, cmd);
 			if (access(full_path, X_OK) == 0)
 				return (free(path_copy), full_path);
 			free(full_path);
 		}
-		dir = strtok(NULL, ":");
+		dir = ft_strtok(NULL, ":");
 	}
 	free(path_copy);
 	return (NULL);
@@ -76,7 +76,7 @@ char	*find_command_path(char *cmd, char **env)
 	i = 0;
 	while (env && env[i])
 	{
-		if (strncmp(env[i], "PATH=", 5) == 0)
+		if (ft_strncmp(env[i], "PATH=", 5) == 0)
 			return (search_in_path(cmd, env[i] + 5));
 		i++;
 	}

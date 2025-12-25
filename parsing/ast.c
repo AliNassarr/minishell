@@ -6,29 +6,11 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 21:40:19 by invader           #+#    #+#             */
-/*   Updated: 2025/12/24 03:16:33 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/25 01:13:17 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-t_treenode	*createast(t_parse_token *tokens, int count, t_head *head);
-
-int	operatorcount(t_parse_token *tokens, int count)
-{
-	int	i;
-	int	opcount;
-
-	i = 0;
-	opcount = 0;
-	while (i < count)
-	{
-		if (tokens[i].type != CMD && tokens[i].type != ARG)
-			opcount++;
-		i++;
-	}
-	return (opcount);
-}
 
 t_treenode	*intializenode(t_parse_token *tokens, int count, t_head *head)
 {
@@ -40,74 +22,9 @@ t_treenode	*intializenode(t_parse_token *tokens, int count, t_head *head)
 	node->tokens = tokens;
 	node->token_count = count;
 	node->heredoc_fd = -1;
+	node->heredoc_no_expand = 0;
 	node->left = NULL;
 	node->right = NULL;
-	return (node);
-}
-
-int	findpipeoperator(t_parse_token *tokens, int start, int end)
-{
-	int	i;
-
-	i = end;
-	while (i >= start)
-	{
-		if (tokens[i].type == PIPE || tokens[i].type == OR
-			|| tokens[i].type == AND)
-			return (i);
-		i--;
-	}
-	return (-1);
-}
-
-int	findrediroperator(t_parse_token *tokens, int start, int end)
-{
-	int	i;
-
-	i = start;
-	while (i <= end)
-	{
-		if (tokens[i].type == REDIR_IN || tokens[i].type == REDIR_OUT
-			|| tokens[i].type == REDIR_APPEND || tokens[i].type == HEREDOC)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-t_treenode	*createredirast(t_parse_token *tokens, int count, int redir_pos,
-		t_head *head)
-{
-	t_treenode	*node;
-	t_parse_token	*left_tokens;
-	int			left_count;
-	int			i;
-	int			j;
-
-	node = intializenode(&tokens[redir_pos], 1, head);
-	if (!node)
-		return (NULL);
-	left_count = 0;
-	i = 0;
-	while (i < count)
-	{
-		if (i != redir_pos && i != redir_pos + 1)
-			left_count++;
-		i++;
-	}
-	left_tokens = gcmalloc(head, sizeof(t_parse_token) * left_count);
-	if (!left_tokens)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (i < count)
-	{
-		if (i != redir_pos && i != redir_pos + 1)
-			left_tokens[j++] = tokens[i];
-		i++;
-	}
-	node->left = createast(left_tokens, left_count, head);
-	node->right = intializenode(&tokens[redir_pos + 1], 1, head);
 	return (node);
 }
 

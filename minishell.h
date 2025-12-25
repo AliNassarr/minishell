@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:44:12 by invader           #+#    #+#             */
-/*   Updated: 2025/12/24 03:16:33 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/25 01:13:17 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <signal.h>
+# include "utils/ft_utils.h"
 
 typedef struct s_node
 {
@@ -51,6 +52,7 @@ typedef struct s_parse_token
 {
 	char			*str;
 	t_token_type	type;
+	int				was_quoted;
 }	t_parse_token;
 
 typedef struct s_treenode
@@ -58,6 +60,7 @@ typedef struct s_treenode
 	t_parse_token		*tokens;
 	int					token_count;
 	int					heredoc_fd;
+	int					heredoc_no_expand;
 	struct s_treenode	*left;
 	struct s_treenode	*right;
 }	t_treenode;
@@ -76,7 +79,6 @@ typedef struct s_shell
 /*
 ** Global variables
 */
-extern int	g_last_exit_status;
 
 char		*fixspaces(char *str, t_head *head, int i, int j);
 int			quotecheck(char *str);

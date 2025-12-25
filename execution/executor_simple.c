@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 04:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/24 04:25:36 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 21:13:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,16 @@
 static int	execute_external_cmd(char **cmd_array, char **env, char *cmd_path,
 		char *original_cmd)
 {
-	pid_t		pid;
-	int			status;
-	extern int	g_in_parent;
+	pid_t							pid;
+	int								status;
+	extern volatile sig_atomic_t	g_signal;
 
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 1);
 	if (pid == 0)
 	{
-		g_in_parent = 0;
+		g_signal &= ~0x100;
 		restoredefaults();
 		execve(cmd_path, cmd_array, env);
 		if (errno == EACCES || errno == EISDIR)
@@ -61,7 +61,9 @@ int	execute_simple_command(t_treenode *node, t_shell *shell, t_head *head)
 	cmd_path = find_command_path(cmd_array[0], shell->env);
 	if (!cmd_path)
 	{
-		fprintf(stderr, "minishell: %s: command not found\n", original_cmd);
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(original_cmd, 2);
+		ft_putendl_fd(": command not found", 2);
 		return (127);
 	}
 	return (execute_external_cmd(cmd_array, shell->env, cmd_path,

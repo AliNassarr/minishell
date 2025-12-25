@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 20:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 13:37:27 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/25 02:06:02 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,15 @@ char	*find_in_path(char *cmd, char **env);
 
 static int	print_env(t_shell *shell)
 {
-	int	i;
+	int		i;
+	char	*equals;
 
 	i = 0;
 	while (shell->env[i])
 	{
-		printf("%s\n", shell->env[i]);
+		equals = ft_strchr(shell->env[i], '=');
+		if (equals)
+			printf("%s\n", shell->env[i]);
 		i++;
 	}
 	return (0);
@@ -40,7 +43,9 @@ static int	execute_cmd(char *cmd_path, char **args, t_shell *shell)
 	if (pid == 0)
 	{
 		execve(cmd_path, &args[1], shell->env);
-		fprintf(stderr, "env: %s: No such file or directory\n", args[1]);
+		ft_putstr_fd("env: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putendl_fd(": No such file or directory", 2);
 		exit(127);
 	}
 	if (cmd_path != args[1])
@@ -60,7 +65,9 @@ int	builtin_env(t_shell *shell, char **args)
 	cmd_path = find_in_path(args[1], shell->env);
 	if (!cmd_path)
 	{
-		fprintf(stderr, "env: %s: No such file or directory\n", args[1]);
+		ft_putstr_fd("env: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putendl_fd(": No such file or directory", 2);
 		return (127);
 	}
 	return (execute_cmd(cmd_path, args, shell));

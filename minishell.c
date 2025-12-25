@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 23:43:39 by invader           #+#    #+#             */
-/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 16:49:40 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 #include "signals/signals.h"
 #include "utils/ft_utils.h"
 #include <unistd.h>
-
-int	g_last_exit_status = 0;
 
 /*
 ** whitespacecheck - Check if string contains non-whitespace characters
@@ -71,12 +69,12 @@ int	init_shell(t_shell *shell, char **envp, t_head *env_gc)
 */
 void	handle_signal_after_readline(t_shell *shell)
 {
-	extern volatile sig_atomic_t	g_signal_flag;
+	extern volatile sig_atomic_t	g_signal;
 
-	if (g_signal_flag == SIGINT)
+	if ((g_signal & 0xFF) == SIGINT)
 	{
 		shell->exit_status = 130;
-		g_signal_flag = 0;
+		g_signal = (g_signal & 0x100);
 	}
 }
 

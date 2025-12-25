@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 23:26:33 by invader           #+#    #+#             */
-/*   Updated: 2025/12/22 01:48:07 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/25 01:41:09 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	mimicpq(char *str, char *joined, int *paranthesis, int *j)
 			*paranthesis = 1;
 		}
 		else
-			joined[(*j)++] = str[i++];
+			copy_char_convert_parens(str, joined, &i, j);
 	}
 }
 
@@ -107,10 +107,11 @@ int	joinsize(t_token *tokens, int count)
 
 char	*joining(t_head *head, t_token *tokens, int count)
 {
-	int		i;
-	int		j;
-	int		paranthesis;
-	char	*joined;
+	int			i;
+	int			j;
+	int			paranthesis;
+	char		*joined;
+	t_join_data	data;
 
 	i = 0;
 	j = 0;
@@ -120,17 +121,10 @@ char	*joining(t_head *head, t_token *tokens, int count)
 		return (NULL);
 	while (i < count)
 	{
-		if (tokens[i].type != NQ && tokens[i].str)
-			mimicp(tokens[i].str, joined, &paranthesis, &j);
-		else
-			mimicpq(tokens[i].str, joined, &paranthesis, &j);
+		process_token(&tokens[i], joined, &paranthesis, &j);
 		i++;
 	}
-	if (paranthesis == 1)
-		joined[j++] = ')';
-	joined[j] = '\0';
-	if (count > 0 && tokens[count - 1].type == NQ
-		&& tokens[count - 1].str != NULL)
-		fix(joined, tokens[count - 1].str, count);
+	data = (t_join_data){joined, &j, &paranthesis, tokens, count};
+	finalize_joining(&data);
 	return (joined);
 }

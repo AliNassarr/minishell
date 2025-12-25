@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/25 02:06:02 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,14 @@ static char	*create_new_var(const char *key, const char *value, t_head *gc)
 	int		key_len;
 
 	key_len = ft_strlen((char *)key);
+	if (!value)
+	{
+		new_var = gcmalloc(gc, key_len + 1);
+		if (!new_var)
+			return (NULL);
+		ft_strcpy(new_var, key);
+		return (new_var);
+	}
 	new_var = gcmalloc(gc, key_len + ft_strlen((char *)value) + 2);
 	if (!new_var)
 		return (NULL);
@@ -63,13 +71,14 @@ char	**set_env_value(char **env, const char *key, const char *value,
 	int		key_len;
 	int		i;
 
-	if (!key || !value)
+	if (!key)
 		return (env);
 	key_len = ft_strlen((char *)key);
 	i = 0;
 	while (env && env[i])
 	{
-		if (ft_strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '=')
+		if (ft_strncmp(env[i], key, key_len) == 0
+			&& (env[i][key_len] == '=' || env[i][key_len] == '\0'))
 		{
 			new_var = create_new_var(key, value, gc);
 			if (!new_var)

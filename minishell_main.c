@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 03:35:41 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 22:32:30 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,17 @@ int	main(int argc, char **argv, char **envp)
 	t_head	*env_gc;
 
 	(void)argv;
+	env_gc = NULL;
 	if (init_check(argc, argv, &env_gc))
+	{
+		if (env_gc)
+			gcallfree(env_gc);
 		return (1);
+	}
 	if (init_shell(&shell, envp, env_gc))
 	{
 		printf("minishell: initialization failed\n");
+		gcallfree(env_gc);
 		return (1);
 	}
 	setupinteractive();

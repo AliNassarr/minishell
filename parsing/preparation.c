@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   preparation.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: invader <invader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 23:00:00 by invader           #+#    #+#             */
-/*   Updated: 2025/12/20 03:28:08 by invader          ###   ########.fr       */
+/*   Updated: 2025/12/25 01:13:17 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,5 +118,5 @@ t_parse_token	*parsingprep(char *input, int *count, t_head *head, char **pp)
 		j++;
 	}
 	parsed[j] = NULL;
-	return (parsetokens(parsed, j, head));
+	return (parsetokens(parsed, j, head, str));
 }

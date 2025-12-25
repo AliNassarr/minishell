@@ -6,52 +6,30 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 10:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 03:53:51 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 21:13:42 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include "../utils/ft_utils.h"
 
-static char	*handle_home_or_tilde(t_shell *shell, char *path)
-{
-	char	*home;
-
-	home = get_env_value(shell->env, "HOME");
-	if (!home)
-		return (printf("cd: HOME not set\n"), NULL);
-	if (!path || path[0] == '\0')
-		return (home);
-	if (ft_strcmp(path, "~") == 0 || path[1] == '\0')
-		return (home);
-	return (ft_strjoin_gc(home, path + 1, shell->env_gc));
-}
+char	*handle_home_or_tilde(t_shell *shell, char *path);
+char	*handle_oldpwd(t_shell *shell);
+char	*handle_double_dash(t_shell *shell);
+char	*handle_invalid_option(char *path, int *error_code);
 
 static char	*get_cd_path(t_shell *shell, char *path, int *error_code)
 {
-	char	*home;
-
 	*error_code = 1;
 	if (!path || path[0] == '\0' || ft_strcmp(path, "~") == 0
 		|| ft_strncmp(path, "~/", 2) == 0)
 		return (handle_home_or_tilde(shell, path));
 	if (ft_strcmp(path, "-") == 0)
-	{
-		if (!shell->oldpwd)
-			return (printf("cd: OLDPWD not set\n"), NULL);
-		printf("%s\n", shell->oldpwd);
-		return (shell->oldpwd);
-	}
+		return (handle_oldpwd(shell));
 	if (ft_strcmp(path, "--") == 0)
-	{
-		home = get_env_value(shell->env, "HOME");
-		if (!home)
-			return (printf("cd: HOME not set\n"), NULL);
-		return (home);
-	}
+		return (handle_double_dash(shell));
 	if (path[0] == '-' && path[1] == '-' && path[2] == '-')
-		return (fprintf(stderr, "cd: %s: invalid option\n", path),
-			*error_code = 2, NULL);
+		return (handle_invalid_option(path, error_code));
 	return (path);
 }
 

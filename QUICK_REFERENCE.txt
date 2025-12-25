@@ -1,0 +1,95 @@
+MINISHELL - FORBIDDEN FUNCTIONS QUICK REFERENCE
+===============================================
+
+SUMMARY: 25 forbidden calls in 14 files
+
+┌──────────┬───────┬──────────────────────────────────┐
+│ Function │ Count │ Replacement                      │
+├──────────┼───────┼──────────────────────────────────┤
+│ fprintf  │  17   │ ft_putstr_fd + ft_putendl_fd     │
+│ memset   │   4   │ ft_memset                        │
+│ strtok   │   2   │ ft_strtok                        │
+│ strncmp  │   1   │ ft_strncmp (already exists)      │
+│ sprintf  │   1   │ ft_itoa                          │
+└──────────┴───────┴──────────────────────────────────┘
+
+FUNCTIONS TO IMPLEMENT
+======================
+
+1. ft_memset (utils/ft_utils2.c)
+2. ft_putstr_fd (utils/ft_utils2.c)
+3. ft_putendl_fd (utils/ft_utils2.c)
+4. ft_itoa (utils/ft_utils3.c)
+5. ft_strtok (utils/ft_utils3.c - verify/add)
+
+UPDATE HEADER
+=============
+Add to utils/ft_utils.h:
+  void    *ft_memset(void *s, int c, size_t n);
+  void    ft_putstr_fd(char *s, int fd);
+  void    ft_putendl_fd(char *s, int fd);
+  char    *ft_itoa(int n);
+
+FILES TO MODIFY
+===============
+signals/signal_setup.c (memset × 4)
+execution/executor_helpers.c (strncmp × 1, strtok × 2)
+tokenization/expanding_helpers.c (sprintf × 1)
+builtins/builtin_cd.c (fprintf × 1)
+builtins/builtin_env.c (fprintf × 2)
+builtins/builtin_exit_helpers.c (fprintf × 2)
+builtins/builtin_exit_helpers2.c (fprintf × 1)
+builtins/builtin_export_helpers.c (fprintf × 3)
+builtins/builtin_export_helpers2.c (fprintf × 3)
+builtins/builtin_pwd_helpers.c (fprintf × 1)
+builtins/builtin_unset.c (fprintf × 1)
+minishell_helpers.c (fprintf × 2)
+execution/executor_simple.c (fprintf × 1)
+
+REPLACEMENT PATTERNS
+====================
+
+memset:
+  memset(&struct, 0, size) → ft_memset(&struct, 0, size)
+
+strncmp:
+  strncmp(s1, s2, n) → ft_strncmp(s1, s2, n)
+
+strtok:
+  strtok(str, delim) → ft_strtok(str, delim)
+
+sprintf (exit status):
+  sprintf(buf, "%d", n) → temp = ft_itoa(n); ft_strcpy(buf, temp); free(temp);
+
+fprintf (simple):
+  fprintf(stderr, "msg\n") → ft_putendl_fd("msg", 2)
+
+fprintf (with variable):
+  fprintf(stderr, "cmd: %s: err\n", var) →
+    ft_putstr_fd("cmd: ", 2);
+    ft_putstr_fd(var, 2);
+    ft_putendl_fd(": err", 2);
+
+fprintf (with quotes):
+  fprintf(stderr, "cmd: `%s': err\n", str) →
+    ft_putstr_fd("cmd: `", 2);
+    ft_putstr_fd(str, 2);
+    ft_putendl_fd("': err", 2);
+
+TESTING CHECKLIST
+=================
+☐ make re (compile)
+☐ norminette (all modified files)
+☐ Test basic commands
+☐ Test error messages
+☐ Test with project tester
+☐ valgrind check
+
+PRIORITY ORDER
+==============
+1. Implement all ft_ functions
+2. Replace simple cases (strncmp, memset)
+3. Replace strtok
+4. Replace sprintf
+5. Replace all fprintf (most complex)
+6. Test & validate

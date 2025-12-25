@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 22:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/23 03:57:15 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/25 02:06:02 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,10 @@ static void	print_export(t_shell *shell)
 			j++;
 		}
 		equals = &shell->env[i][j];
-		if (*equals == '=')
+		if (*equals == '=' && *(equals + 1))
 			printf("=\"%s\"", equals + 1);
+		else if (*equals == '=')
+			printf("=\"\"");
 		printf("\n");
 		i++;
 	}

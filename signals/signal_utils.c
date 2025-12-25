@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 00:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/24 04:34:04 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/24 16:49:40 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	checksignalstatus(int status)
 
 void	printsignalmsg(int signal_num)
 {
-	if (!g_in_parent)
+	if (!(g_signal & 0x100))
 		return ;
 	if (signal_num == SIGINT)
 		write(1, "\n", 1);

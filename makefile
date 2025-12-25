@@ -6,7 +6,7 @@
 #    By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/26 16:55:00 by invader           #+#    #+#              #
-#    Updated: 2025/12/24 03:16:33 by alnassar         ###   ########.fr        #
+#    Updated: 2025/12/25 01:13:17 by alnassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,13 +22,21 @@ SRCS =	minishell.c \
 		minishell_helpers2.c \
 		gc/gc.c \
 		tokenization/helperr.c \
+		tokenization/helperr_split.c \
+		tokenization/helperr_utils.c \
 		tokenization/helper.c \
 		tokenization/expanding.c \
+		tokenization/expanding_helpers.c \
 		tokenization/joining.c \
+		tokenization/joining_helpers.c \
 		tokenization/stage1.c \
 		parsing/ast.c \
+		parsing/ast_helpers.c \
+		parsing/ast_redir.c \
 		parsing/preparation.c \
+		parsing/preparation_helpers.c \
 		parsing/stage2.c \
+		parsing/stage2_helpers.c \
 		debug/astprint.c \
 		debug/astprint_helpers.c \
 		execution/executor.c \
@@ -36,7 +44,10 @@ SRCS =	minishell.c \
 		execution/executor_simple.c \
 		execution/executor_redir.c \
 		execution/executor_pipe.c \
+		execution/executor_pipe_helpers.c \
 		execution/heredoc_prepare.c \
+		execution/heredoc_expand.c \
+		execution/heredoc_expand_utils.c \
 		builtins/builtin_dispatch.c \
 		builtins/builtin_dispatch_helpers.c \
 		builtins/builtin_dispatch_join.c \
