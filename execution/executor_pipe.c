@@ -6,7 +6,7 @@
 /*   By: alnassar <alnassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 04:00:00 by alnassar          #+#    #+#             */
-/*   Updated: 2025/12/24 18:42:36 by alnassar         ###   ########.fr       */
+/*   Updated: 2025/12/25 02:48:05 by alnassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,23 @@ static void	handle_pipe_child_right(int *pipefd, t_treenode *node,
 	exit(execute_ast(node->right, shell, head));
 }
 
+static int	wait_and_get_status(pid_t pid1, pid_t pid2)
+{
+	int	status;
+	int	status2;
+
+	waitpid(pid1, &status, 0);
+	waitpid(pid2, &status2, 0);
+	if (WIFSIGNALED(status))
+		return (checksignalstatus(status));
+	return (checksignalstatus(status2));
+}
+
 int	execute_pipe(t_treenode *node, t_shell *shell, t_head *head)
 {
 	int		pipefd[2];
 	pid_t	pid1;
 	pid_t	pid2;
-	int		status;
-	int		status2;
 
 	precreate_output_files(node->left);
 	if (pipe(pipefd) == -1)
@@ -63,7 +73,5 @@ int	execute_pipe(t_treenode *node, t_shell *shell, t_head *head)
 		handle_pipe_child_right(pipefd, node, shell, head);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	waitpid(pid1, &status, 0);
-	waitpid(pid2, &status2, 0);
-	return (checksignalstatus(status2));
+	return (wait_and_get_status(pid1, pid2));
 }

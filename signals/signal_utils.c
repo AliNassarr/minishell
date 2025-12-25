@@ -35,4 +35,6 @@ void	printsignalmsg(int signal_num)
 		return ;
 	if (signal_num == SIGINT)
 		write(1, "\n", 1);
+	else if (signal_num == SIGQUIT)
+		write(1, "Quit (core dumped)\n", 19);
 }
